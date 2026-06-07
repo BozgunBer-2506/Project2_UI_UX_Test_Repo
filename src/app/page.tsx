@@ -3863,40 +3863,31 @@ export default function Home() {
           ) : null}
           </>
               </div>
-            </div>{/* close flex-1 relative */}
-
-            {/* Narrative section - always visible below scene */}
+            {/* Narrative overlay - absolute bottom inside scene image */}
             {!isCharacterSelection ? (
-              <div className="shrink-0 border-t border-white/[0.06]" style={{background: 'rgba(3,3,3,0.98)'}}>
-                {/* Navigation dots */}
-                <div className="flex justify-center gap-1.5 pt-2">
+              <div className="absolute bottom-0 left-0 right-0 z-20" style={{background: 'linear-gradient(to top, rgba(2,2,2,0.98) 0%, rgba(2,2,2,0.85) 65%, transparent 100%)'}}>
+                <div className="flex justify-center gap-1.5 pt-3">
                   {[0,1,2,3].map((dot) => (
-                    <div key={dot} className="rounded-full transition-all duration-300" style={{width: dot === 0 ? 20 : 6, height: 6, background: dot === 0 ? '#d4af37' : 'rgba(255,255,255,0.15)'}} />
+                    <div key={dot} className="rounded-full transition-all duration-300" style={{width: dot === 0 ? 20 : 6, height: 6, background: dot === 0 ? '#d4af37' : 'rgba(255,255,255,0.2)'}} />
                   ))}
                 </div>
-                {/* DM narrative box */}
-                <div className="relative mx-4 my-2 rounded-xl p-3" style={{background: 'rgba(5,5,5,0.99)', border: '1px solid rgba(212,175,55,0.2)', boxShadow: '0 -20px 40px rgba(0,0,0,0.9)'}}>
-                  <div className="absolute top-0 left-8 right-8 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent)'}} />
-                  <div className="flex items-start gap-2.5">
-                    <span className="shrink-0 rounded px-2 py-0.5 text-[0.62rem] font-black font-cinzel" style={{background: 'rgba(212,175,55,0.12)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.3)'}}>
+                <div className="relative mx-6 mt-2 mb-4 rounded-xl px-5 py-4" style={{background: 'rgba(6,6,6,0.5)', border: '1px solid rgba(212,175,55,0.2)', backdropFilter: 'blur(10px)'}}>
+                  <div className="absolute top-0 left-10 right-10 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.45), transparent)'}} />
+                  <div className="flex items-start gap-3">
+                    <span className="shrink-0 rounded px-2 py-0.5 text-[0.62rem] font-black font-cinzel" style={{background: 'rgba(212,175,55,0.15)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.35)'}}>
                       {currentDialogueLine.speaker}
                     </span>
                     <div className="flex-1 min-w-0 relative">
-                      <p className="text-[0.9rem] font-semibold leading-snug text-white">
+                      <p className="text-center text-[1rem] font-semibold leading-relaxed" style={{color: '#e8e4d8', textShadow: '0 1px 10px rgba(0,0,0,1)'}}>
                         {dialogueWords.map((word, index) => (
                           <span
                             className={`inline-block transition-all duration-200 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
                             key={`${word}-${index}`}
                           >
-                            {word}{index < dialogueWords.length - 1 ? ' ' : ''}
+                            {word}{index < dialogueWords.length - 1 ? ' ' : ''}
                           </span>
                         ))}
                       </p>
-                      {activeCharacter && activeNpc ? (
-                        <p className="mt-1 text-[0.6rem] text-slate-600">
-                          Hauptcharakter: {activeCharacter.name}. Begleitung: {activeNpc.name}.
-                        </p>
-                      ) : null}
                       {!isLastDialogueLine || !isDialogueFullyVisible ? (
                         <button
                           aria-label="Continue"
@@ -3913,6 +3904,7 @@ export default function Home() {
                 </div>
               </div>
             ) : null}
+            </div>{/* close flex-1 relative */}
           </main>{/* close center */}
 
           {/* RIGHT SIDEBAR */}
