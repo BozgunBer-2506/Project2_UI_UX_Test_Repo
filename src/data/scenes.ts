@@ -58,9 +58,9 @@ export const characters: Record<CharacterId, Character> = {
   ryu: {
     id: "ryu",
     name: "Ryu Watanabe",
-    className: "Fighter",
-    level: 3,
-    subclassName: "Samurai",
+    className: "Schurke",
+    level: 5,
+    subclassName: "Meisterdieb",
     background: "Samurai-Schüler des Watanabe-Clans",
     feats: ["Defensive Haltung", "Waffenmeisterschaft"],
     modelImageUrl: "/characters/ryu-watanabe-model.png",

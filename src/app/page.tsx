@@ -3,7 +3,7 @@
 import {
   BookOpen, Bot, ChevronDown, ChevronRight, ClipboardList,
   Dice5, Drama, Eye, Feather, Flame, FlaskConical, HandMetal,
-  HeartPulse, Leaf, LogIn, Music, Palette, Scan, ScrollText,
+  HeartPulse, Leaf, LogIn, MessageSquare, Music, Palette, Scan, ScrollText,
   Search, Send, ShieldCheck, Skull, Snowflake, Sparkles,
   Star, Sword, Swords, Telescope, Trees, UserPlus, Waves,
   Wind, Wrench, X, Zap,
@@ -175,30 +175,22 @@ const initialInventory: InventoryStateItem[] = [
 const characterSheets = {
   ryu: {
     saves: [
-      ["STR", "+6"],
-      ["DEX", "+2"],
-      ["CON", "+6"],
-      ["WIS", "+1"],
+      ["GEW", "+7"],
+      ["INT", "+5"],
+      ["STÄ", "+1"],
+      ["WEI", "+2"],
     ],
     skills: [
-      ["Acrobatics", "+2"],
-      ["Animal Handling", "+1"],
-      ["Arcana", "-1"],
-      ["Athletics", "+3"],
-      ["Deception", "+3"],
-      ["History", "-1"],
-      ["Insight", "+4"],
-      ["Intimidation", "+0"],
-      ["Investigation", "-1"],
-      ["Medicine", "+1"],
-      ["Nature", "-1"],
-      ["Perception", "+1"],
-      ["Performance", "+0"],
-      ["Persuasion", "+3"],
-      ["Religion", "-1"],
-      ["Sleight of Hand", "+2"],
-      ["Stealth", "+5"],
-      ["Survival", "+4"],
+      ["Akrobatik", "+7"],
+      ["Überzeugen", "+2"],
+      ["Heimlichkeit", "+9"],
+      ["Einschüchtern", "+1"],
+      ["Fingerfertigkeit", "+8"],
+      ["Überleben", "+3"],
+      ["Athletik", "+4"],
+      ["Motivation", "+2"],
+      ["Wahrnehmung", "+5"],
+      ["Arkane Kunde", "+0"],
     ],
     actions: [
       {
@@ -2584,18 +2576,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Initiative button */}
-                <div className="px-4 py-2.5 border-b border-white/[0.07] shrink-0">
-                  <button
-                    className="w-full rounded px-3 py-2 text-xs font-bold text-left transition-all hover:opacity-90"
-                    onClick={() => rollFormula(`${activeCharacter.name} Initiative`, `1d20+${activeCharacter.stats.initiative}`, { initiativeCharacterId: activeCharacter.id })}
-                    style={{background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.25)', color: '#d4af37'}}
-                    type="button"
-                  >
-                    Initiative +{activeCharacter.stats.initiative}
-                  </button>
-                </div>
-
                 {/* Skills */}
                 <div className="px-3 py-3 flex-1 overflow-y-auto">
                   <div className="flex items-center gap-1.5 mb-2.5">
@@ -2607,6 +2587,16 @@ export default function Home() {
                     <div className="grid grid-cols-2 gap-1">
                       {activeSheet.skills.map(([label, value]) => {
                         const skillMeta: Record<string, {attr: string; Icon: React.ElementType}> = {
+                          Akrobatik:         {attr: 'GEW', Icon: Waves},
+                          Heimlichkeit:      {attr: 'GEW', Icon: Wind},
+                          Fingerfertigkeit:  {attr: 'GEW', Icon: HandMetal},
+                          Athletik:          {attr: 'STÄ', Icon: Zap},
+                          Wahrnehmung:       {attr: 'WEI', Icon: Scan},
+                          Überzeugen:        {attr: 'CHA', Icon: Drama},
+                          Einschüchtern:     {attr: 'CHA', Icon: Skull},
+                          Überleben:         {attr: 'WEI', Icon: Flame},
+                          Motivation:        {attr: 'WEI', Icon: Sparkles},
+                          'Arkane Kunde':    {attr: 'INT', Icon: Star},
                           Acrobatics:        {attr: 'GEW', Icon: Waves},
                           'Animal Handling': {attr: 'WEI', Icon: Leaf},
                           Arcana:            {attr: 'INT', Icon: Sparkles},
@@ -2627,7 +2617,8 @@ export default function Home() {
                           Survival:          {attr: 'WEI', Icon: Flame},
                         };
                         const meta = skillMeta[label] ?? {attr: 'GEW', Icon: Feather};
-                        const { attr, Icon: SkillIcon } = meta;
+                        const { attr } = meta;
+                        const SkillIcon = meta.Icon as React.ComponentType<{className?: string; style?: React.CSSProperties}>;
                         const isPending = pendingSkillNames.has(label);
                         return (
                           <button
@@ -2638,7 +2629,7 @@ export default function Home() {
                             type="button"
                           >
                             <div className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center" style={{background: isPending ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.07)'}}>
-                              <SkillIcon size={12} style={{color: isPending ? '#d4af37' : '#94a3b8'}} weight="bold" />
+                              <SkillIcon className="w-3 h-3" style={{color: isPending ? '#d4af37' : '#94a3b8'}} />
                             </div>
                             <div className="flex-1 min-w-0">
                               <span className="block truncate text-slate-300 text-[0.58rem] font-semibold leading-tight">{label}</span>
@@ -2659,8 +2650,7 @@ export default function Home() {
                     onClick={() => setIsSheetExpanded((e) => !e)}
                     type="button"
                   >
-                    Details anzeigen
-                    <ChevronDown className={`w-3 h-3 transition ${isSheetExpanded ? 'rotate-180' : ''}`} />
+                    Details anzeigen <ChevronDown className={`w-3 h-3 transition ${isSheetExpanded ? 'rotate-180' : ''}`} />
                   </button>
 
                   {isSheetExpanded && activeSheet ? (
@@ -2744,13 +2734,13 @@ export default function Home() {
                 {/* Bottom chat bar */}
                 <div className="flex items-center gap-2 px-4 py-3 border-t border-white/[0.07] shrink-0">
                   <button className="text-slate-600 hover:text-slate-400 transition-colors" onClick={() => setIsDmPanelOpen((o) => !o)} type="button">
-                    <Bot className="w-4 h-4" />
+                    <MessageSquare className="w-4 h-4" />
                   </button>
                   <button className="text-slate-600 hover:text-slate-400 transition-colors" type="button">
-                    <Palette className="w-4 h-4" />
+                    <UserPlus className="w-4 h-4" />
                   </button>
                   <button className="text-slate-600 hover:text-slate-400 transition-colors" type="button">
-                    <ScrollText className="w-4 h-4" />
+                    <Music className="w-4 h-4" />
                   </button>
                   <div className="flex-1 relative">
                     <input
@@ -2780,21 +2770,21 @@ export default function Home() {
                         className="w-full rounded-md border border-ember-400/30 bg-ember-500/10 px-2 py-2 text-left text-xs transition hover:border-ember-400"
                         onClick={() =>
                           rollFormula(
-                            `${activeCharacter.name} Initiative`,
-                            `1d20+${activeCharacter.stats.initiative}`,
-                            { initiativeCharacterId: activeCharacter.id },
+                            `${activeCharacter!.name} Initiative`,
+                            `1d20+${activeCharacter!.stats.initiative}`,
+                            { initiativeCharacterId: activeCharacter!.id },
                           )
                         }
                         type="button"
                       >
-                        Initiative +{activeCharacter.stats.initiative}
+                        Initiative +{activeCharacter!.stats.initiative}
                       </button>
                       <div className="space-y-1">
                         <p className="text-[0.62rem] uppercase tracking-[0.14em] text-slate-400">
                           Skills
                         </p>
                         <div className="grid grid-cols-2 gap-1">
-                          {activeSheet.skills.map(([label, value]) => (
+                          {activeSheet!.skills.map(([label, value]) => (
                             <button
                               className={`min-w-0 rounded-md border px-2 py-1.5 text-left text-[0.68rem] transition hover:border-ember-400/70 ${
                                 pendingSkillNames.has(label)
@@ -2804,7 +2794,7 @@ export default function Home() {
                               key={label}
                               onClick={() =>
                                 rollFormula(
-                                  `${activeCharacter.name} ${label}`,
+                                  `${activeCharacter!.name} ${label}`,
                                   `1d20${value}`,
                                   { skill: label },
                                 )
@@ -2826,7 +2816,7 @@ export default function Home() {
                           Aktionen
                         </p>
                         <div className="grid gap-1">
-                        {activeSheet.actions.map((action) => (
+                        {activeSheet!.actions.map((action) => (
                           <div
                             className="rounded-md border border-white/10 bg-white/[0.05] p-2"
                             key={action.name}
@@ -2931,22 +2921,22 @@ export default function Home() {
                 >
                   <div className="flex h-32 items-end justify-center bg-gradient-to-b from-white/10 to-black/40">
                     <Image
-                      alt={`${activeNpc.name} Portrait`}
+                      alt={`${activeNpc!.name} Portrait`}
                       className="max-h-32 object-contain drop-shadow-2xl"
                       height={190}
-                      src={activeNpc.modelImageUrl}
+                      src={activeNpc!.modelImageUrl}
                       width={150}
                     />
                   </div>
                   <div className="flex items-start justify-between gap-2 border-t border-white/10 p-2">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-bold">{activeNpc.name}</p>
+                      <p className="truncate text-sm font-bold">{activeNpc!.name}</p>
                       <p className="text-[0.65rem] uppercase tracking-[0.12em] text-slate-400">
                         Begleitung
                       </p>
                     </div>
                     <button
-                      aria-label={`${activeNpc.name} Sheet umschalten`}
+                      aria-label={`${activeNpc!.name} Sheet umschalten`}
                       className="grid size-7 shrink-0 place-items-center rounded-md border border-white/10 bg-white/[0.06] text-slate-200 transition hover:border-ember-400/70"
                       onClick={() =>
                         setIsCompanionExpanded((isExpanded) => !isExpanded)
@@ -2962,13 +2952,13 @@ export default function Home() {
                   </div>
                   <div className="grid grid-cols-3 gap-1 border-t border-white/10 p-1.5 text-center">
                     <span className="rounded bg-red-500/15 px-1 py-1 text-[0.62rem] font-bold text-red-100">
-                      HP {companionRuntimeStats.currentHp}/{companionRuntimeStats.maxHp}
+                      HP {companionRuntimeStats!.currentHp}/{companionRuntimeStats!.maxHp}
                     </span>
                     <span className="rounded bg-white/[0.06] px-1 py-1 text-[0.62rem] font-bold text-slate-100">
-                      AC {companionRuntimeStats.ac}
+                      AC {companionRuntimeStats!.ac}
                     </span>
                     <span className="rounded bg-white/[0.06] px-1 py-1 text-[0.62rem] font-bold text-slate-100">
-                      SP {activeNpc.stats.speed}
+                      SP {activeNpc!.stats.speed}
                     </span>
                   </div>
                   {isCompanionExpanded && companionSheet ? (
@@ -2977,20 +2967,20 @@ export default function Home() {
                         className="w-full rounded-md border border-ember-400/30 bg-ember-500/10 px-2 py-2 text-left text-xs transition hover:border-ember-400"
                         onClick={() =>
                           rollFormula(
-                            `${activeNpc.name} Initiative`,
-                            `1d20+${activeNpc.stats.initiative}`,
-                            { initiativeCharacterId: activeNpc.id },
+                            `${activeNpc!.name} Initiative`,
+                            `1d20+${activeNpc!.stats.initiative}`,
+                            { initiativeCharacterId: activeNpc!.id },
                           )
                         }
                         type="button"
                       >
-                        Initiative +{activeNpc.stats.initiative}
+                        Initiative +{activeNpc!.stats.initiative}
                       </button>
                       <div className="space-y-1">
                         <p className="text-[0.62rem] uppercase tracking-[0.14em] text-slate-400">
                           Aktionen
                         </p>
-                        {companionSheet.actions.map((action) => (
+                        {companionSheet!.actions.map((action) => (
                           <div
                             className="rounded-md border border-white/10 bg-white/[0.05] p-2"
                             key={action.name}
@@ -3015,7 +3005,7 @@ export default function Home() {
                                   }
 
                                   rollFormula(
-                                    `${activeNpc.name} ${action.name} Angriff`,
+                                    `${activeNpc!.name} ${action.name} Angriff`,
                                     `1d20+${action.attack}`,
                                   );
                                 }}
@@ -3030,7 +3020,7 @@ export default function Home() {
                                 className="rounded-md border border-white/10 bg-white/[0.06] px-1 py-1.5 text-[0.65rem] transition hover:border-ember-400/70"
                                 onClick={() =>
                                   rollFormula(
-                                    `${activeNpc.name} ${action.name} Schaden`,
+                                    `${activeNpc!.name} ${action.name} Schaden`,
                                     action.damage,
                                   )
                                 }
@@ -3056,18 +3046,18 @@ export default function Home() {
                 <div className="hidden overflow-hidden rounded-md border border-white/10 bg-black/35">
                   <div className="flex h-40 items-end justify-center bg-gradient-to-b from-white/5 to-transparent">
                     <Image
-                      alt={`${activeCharacter.name} Charakterbild`}
+                      alt={`${activeCharacter!.name} Charakterbild`}
                       className="max-h-40 object-contain drop-shadow-2xl"
                       height={220}
-                      src={activeCharacter.modelImageUrl}
+                      src={activeCharacter!.modelImageUrl}
                       width={180}
                     />
                   </div>
                   <div className="border-t border-white/10 p-2">
-                    <p className="text-sm font-bold">{activeCharacter.name}</p>
+                    <p className="text-sm font-bold">{activeCharacter!.name}</p>
                     <p className="text-xs text-slate-400">
-                      Level {activeCharacter.level} {activeCharacter.className} ·{" "}
-                      {activeCharacter.subclassName}
+                      Level {activeCharacter!.level} {activeCharacter!.className} ·{" "}
+                      {activeCharacter!.subclassName}
                     </p>
                   </div>
                 </div>
@@ -3092,7 +3082,7 @@ export default function Home() {
                     <Swords className="mb-1 size-4 text-ember-400" />
                     <p className="text-xs text-slate-400">Speed</p>
                     <p className="text-sm font-bold">
-                      {activeCharacter.stats.speed} ft.
+                      {activeCharacter!.stats.speed} ft.
                     </p>
                   </div>
                 </div>
@@ -3101,9 +3091,9 @@ export default function Home() {
                   className="w-full rounded-md border border-ember-400/30 bg-ember-500/10 px-3 py-2 text-left transition hover:border-ember-400"
                   onClick={() =>
                     rollFormula(
-                      `${activeCharacter.name} Initiative`,
-                      `1d20+${activeCharacter.stats.initiative}`,
-                      { initiativeCharacterId: activeCharacter.id },
+                      `${activeCharacter!.name} Initiative`,
+                      `1d20+${activeCharacter!.stats.initiative}`,
+                      { initiativeCharacterId: activeCharacter!.id },
                     )
                   }
                   type="button"
@@ -3112,7 +3102,7 @@ export default function Home() {
                     Initiative würfeln
                   </span>
                   <span className="text-sm font-bold">
-                    +{activeCharacter.stats.initiative}
+                    +{activeCharacter!.stats.initiative}
                   </span>
                 </button>
 
@@ -3121,13 +3111,13 @@ export default function Home() {
                     Saving Throws
                   </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {activeSheet.saves.map(([label, value]) => (
+                    {activeSheet!.saves.map(([label, value]) => (
                       <button
                         className="rounded-md border border-white/10 bg-white/[0.06] px-2 py-2 text-left text-xs transition hover:border-ember-400/70"
                         key={label}
                         onClick={() =>
                           rollFormula(
-                            `${activeCharacter.name} ${label}`,
+                            `${activeCharacter!.name} ${label}`,
                             `1d20${value}`,
                             { skill: label },
                           )
@@ -3158,7 +3148,7 @@ export default function Home() {
                   </button>
                   {isSkillsExpanded ? (
                   <div className="space-y-1">
-                    {activeSheet.skills.map(([label, value]) => (
+                    {activeSheet!.skills.map(([label, value]) => (
                       <button
                         className={`w-full rounded-md border px-2 py-2 text-left text-xs transition hover:border-ember-400/70 ${
                           pendingSkillNames.has(label)
@@ -3168,7 +3158,7 @@ export default function Home() {
                         key={label}
                         onClick={() =>
                           rollFormula(
-                            `${activeCharacter.name} ${label}`,
+                            `${activeCharacter!.name} ${label}`,
                             `1d20${value}`,
                             { skill: label },
                           )
@@ -3217,7 +3207,7 @@ export default function Home() {
                         {combatStatus}
                       </span>
                     </button>
-                    {activeSheet.actions.map((action) => (
+                    {activeSheet!.actions.map((action) => (
                       <div
                         className="rounded-md border border-white/10 bg-white/[0.05] p-2"
                         key={action.name}
@@ -3326,10 +3316,10 @@ export default function Home() {
                 >
                   <div className="grid size-12 shrink-0 place-items-end overflow-hidden rounded-md border border-white/10 bg-black/35">
                     <Image
-                      alt={`${activeNpc.name} Begleiterbild`}
+                      alt={`${activeNpc!.name} Begleiterbild`}
                       className="max-h-12 object-contain drop-shadow-xl"
                       height={72}
-                      src={activeNpc.modelImageUrl}
+                      src={activeNpc!.modelImageUrl}
                       width={56}
                     />
                   </div>
@@ -3337,10 +3327,10 @@ export default function Home() {
                     <p className="text-xs uppercase tracking-[0.16em] text-ember-300">
                       NPC-Begleitung
                     </p>
-                    <p className="truncate text-sm font-bold">{activeNpc.name}</p>
+                    <p className="truncate text-sm font-bold">{activeNpc!.name}</p>
                     <p className="line-clamp-2 text-xs text-slate-400">
-                      Level {activeNpc.level} {activeNpc.className} ·{" "}
-                      {activeNpc.subclassName}
+                      Level {activeNpc!.level} {activeNpc!.className} ·{" "}
+                      {activeNpc!.subclassName}
                     </p>
                   </div>
                   <div className="grid shrink-0 grid-cols-3 gap-1 text-center text-[0.65rem] font-bold text-slate-100">
@@ -3354,7 +3344,7 @@ export default function Home() {
                     </span>
                     <span className="rounded border border-white/10 bg-white/[0.06] px-1.5 py-1">
                       <span className="block text-[0.55rem] font-semibold text-slate-400">SPD</span>
-                      {activeNpc.stats.speed}
+                      {activeNpc!.stats.speed}
                     </span>
                   </div>
                   <div className="shrink-0 text-slate-300">
@@ -3371,18 +3361,18 @@ export default function Home() {
                     <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] overflow-hidden rounded-md border border-white/10 bg-black/35">
                       <div className="flex h-24 items-end justify-center bg-gradient-to-b from-white/5 to-transparent">
                         <Image
-                          alt={`${activeNpc.name} Begleiterbild`}
+                          alt={`${activeNpc!.name} Begleiterbild`}
                           className="max-h-24 object-contain drop-shadow-2xl"
                           height={180}
-                          src={activeNpc.modelImageUrl}
+                          src={activeNpc!.modelImageUrl}
                           width={140}
                         />
                       </div>
                       <div className="border-l border-white/10 p-2">
-                        <p className="text-sm font-bold">{activeNpc.name}</p>
+                        <p className="text-sm font-bold">{activeNpc!.name}</p>
                         <p className="text-xs text-slate-400">
-                          Level {activeNpc.level} {activeNpc.className} ·{" "}
-                          {activeNpc.subclassName}
+                          Level {activeNpc!.level} {activeNpc!.className} ·{" "}
+                          {activeNpc!.subclassName}
                         </p>
                       </div>
                     </div>
@@ -3406,7 +3396,7 @@ export default function Home() {
                           <Swords className="mb-1 size-4 text-ember-400" />
                           <p className="text-xs text-slate-400">Speed</p>
                           <p className="whitespace-nowrap text-sm font-bold">
-                            {activeNpc.stats.speed} ft.
+                            {activeNpc!.stats.speed} ft.
                           </p>
                         </div>
                     </div>
@@ -3415,9 +3405,9 @@ export default function Home() {
                       className="w-full rounded-md border border-ember-400/30 bg-ember-500/10 px-3 py-2 text-left transition hover:border-ember-400"
                       onClick={() =>
                         rollFormula(
-                          `${activeNpc.name} Initiative`,
-                          `1d20+${activeNpc.stats.initiative}`,
-                          { initiativeCharacterId: activeNpc.id },
+                          `${activeNpc!.name} Initiative`,
+                          `1d20+${activeNpc!.stats.initiative}`,
+                          { initiativeCharacterId: activeNpc!.id },
                         )
                       }
                       type="button"
@@ -3426,7 +3416,7 @@ export default function Home() {
                         Initiative würfeln
                       </span>
                       <span className="text-sm font-bold">
-                        +{activeNpc.stats.initiative}
+                        +{activeNpc!.stats.initiative}
                       </span>
                     </button>
 
@@ -3435,7 +3425,7 @@ export default function Home() {
                         Aktionen
                       </p>
                       <div className="space-y-2">
-                        {companionSheet.actions.map((action) => (
+                        {companionSheet!.actions.map((action) => (
                           <div
                             className="rounded-md border border-white/10 bg-white/[0.05] p-2"
                             key={action.name}
@@ -3449,7 +3439,7 @@ export default function Home() {
                                 className="rounded-md border border-white/10 bg-white/[0.06] px-2 py-2 text-xs transition hover:border-ember-400/70"
                                 onClick={() =>
                                   rollFormula(
-                                    `${activeNpc.name} ${action.name} Angriff`,
+                                    `${activeNpc!.name} ${action.name} Angriff`,
                                     `1d20+${action.attack}`,
                                   )
                                 }
@@ -3461,7 +3451,7 @@ export default function Home() {
                                 className="rounded-md border border-white/10 bg-white/[0.06] px-2 py-2 text-xs transition hover:border-ember-400/70"
                                 onClick={() =>
                                   rollFormula(
-                                    `${activeNpc.name} ${action.name} Schaden`,
+                                    `${activeNpc!.name} ${action.name} Schaden`,
                                     action.damage,
                                   )
                                 }
