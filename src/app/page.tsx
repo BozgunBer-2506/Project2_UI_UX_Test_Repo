@@ -64,7 +64,7 @@ const LAST_SAVE_KEY = "falkenwacht.lastSave";
 const MAX_ACCOUNT_SAVES = 15;
 const MAX_CAMPAIGN_SAVES = 5;
 const CAMPAIGN_TITLE = "Falkenwacht - Die Korruption der Greifenstadt";
-const WORD_REVEAL_MS = 85;
+const WORD_REVEAL_MS = 35;
 const diceTypes = [4, 6, 8, 10, 12, 20, 100] as const;
 const BACKEND_SLOT_NAME = "autosave";
 const BACKEND_COMBAT_SCENE_NUMBER = 3;
@@ -3865,46 +3865,69 @@ export default function Home() {
               </div>
             {/* Narrative overlay - absolute bottom inside scene image */}
             {!isCharacterSelection ? (
-              <div className="absolute bottom-0 left-0 right-0 z-20" style={{background: 'linear-gradient(to top, rgba(2,2,2,0.98) 0%, rgba(2,2,2,0.85) 65%, transparent 100%)'}}>
-                <div className="flex justify-center gap-1.5 pt-3">
+              <div className="absolute bottom-0 left-0 right-0 z-20" style={{background: 'linear-gradient(to top, rgba(2,2,2,0.99) 0%, rgba(2,2,2,0.92) 55%, rgba(2,2,2,0.4) 82%, transparent 100%)'}}>
+                <div className="flex justify-center gap-1.5 pt-2">
                   {[0,1,2,3].map((dot) => (
                     <div key={dot} className="rounded-full transition-all duration-300" style={{width: dot === 0 ? 20 : 6, height: 6, background: dot === 0 ? '#d4af37' : 'rgba(255,255,255,0.2)'}} />
                   ))}
                 </div>
-                <div className="relative mx-6 mt-2 mb-4 rounded-xl px-5 py-4" style={{background: 'rgba(4,4,8,0.92)', border: '1px solid rgba(212,175,55,0.25)', backdropFilter: 'blur(16px)'}}>
+                <div
+                  className="relative mx-6 mt-2 rounded-xl px-5 py-3 cursor-pointer"
+                  onClick={() => { if (!isDialogueFullyVisible) setVisibleWordCount(dialogueWords.length); }}
+                  style={{background: 'rgba(4,4,8,0.93)', border: '1px solid rgba(212,175,55,0.25)'}}
+                >
                   <div className="absolute top-0 left-10 right-10 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.45), transparent)'}} />
                   <div className="flex items-start gap-3">
-                    <span className="shrink-0 rounded px-2 py-0.5 text-[0.62rem] font-black font-cinzel" style={{background: 'rgba(212,175,55,0.15)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.35)'}}>
+                    <span className="shrink-0 rounded px-2 py-0.5 text-[0.62rem] font-black font-cinzel mt-0.5" style={{background: 'rgba(212,175,55,0.15)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.35)'}}>
                       {currentDialogueLine.speaker}
                     </span>
-                    <div className="flex-1 min-w-0 relative">
-                      <p className="text-center text-[1rem] font-semibold leading-relaxed" style={{color: '#ffffff', textShadow: '0 1px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8)'}}>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-center text-[0.95rem] font-semibold leading-relaxed" style={{color: '#ffffff', textShadow: '0 1px 10px rgba(0,0,0,1)'}}>
                         {dialogueWords.map((word, index) => (
                           <span
-                            className={`inline-block transition-all duration-200 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
+                            className={`inline-block transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
                             key={`${word}-${index}`}
                           >
                             {word}{index < dialogueWords.length - 1 ? ' ' : ''}
                           </span>
                         ))}
                       </p>
-                      {!isLastDialogueLine || !isDialogueFullyVisible ? (
+                      {!isDialogueFullyVisible ? (
+                        <p className="text-center text-[0.55rem] mt-1 animate-pulse" style={{color: 'rgba(212,175,55,0.5)'}}>Klicken zum Überspringen</p>
+                      ) : !isLastDialogueLine ? (
                         <button
                           aria-label="Continue"
-                          className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center text-black"
-                          onClick={continueDialogue}
+                          className="mt-2 mx-auto flex items-center gap-1.5 px-3 py-1 rounded text-[0.65rem] font-bold text-black transition hover:opacity-90"
+                          onClick={(e) => { e.stopPropagation(); continueDialogue(); }}
                           style={{background: '#d4af37'}}
                           type="button"
                         >
-                          <ChevronRight className="w-3.5 h-3.5" />
+                          Weiter <ChevronRight className="w-3 h-3" />
                         </button>
                       ) : null}
                     </div>
                   </div>
                 </div>
+                {isLastDialogueLine && isDialogueFullyVisible && !isCombatScene && currentScene.choices.length > 0 ? (
+                  <div className="mx-6 mt-2 mb-3 space-y-1.5">
+                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-center mb-1.5" style={{color: 'rgba(212,175,55,0.55)'}}>Deine Entscheidung</p>
+                    {currentScene.choices.map((choice) => (
+                      <button
+                        className="w-full rounded-lg px-4 py-2.5 text-left text-sm font-semibold text-slate-100 transition-all hover:border-amber-400/70 hover:bg-amber-500/10"
+                        key={choice.id}
+                        onClick={() => chooseAction(choice)}
+                        style={{background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)'}}
+                        type="button"
+                      >
+                        <span className="mr-2" style={{color: '#d4af37'}}>›</span>
+                        {choice.label}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             ) : null}
-            </div>{/* close flex-1 relative */}
+                        </div>{/* close flex-1 relative */}
           </main>{/* close center */}
 
           {/* RIGHT SIDEBAR */}
