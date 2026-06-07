@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BookOpen, Bot, ChevronDown, ChevronRight, ClipboardList,
+  BookOpen, Bot, ChevronDown, ChevronRight, ClipboardList, Hourglass,
   Dice5, Drama, Eye, Feather, Flame, FlaskConical, HandMetal,
   HeartPulse, Leaf, LogIn, MessageSquare, Music, Palette, Scan, ScrollText,
   Search, Send, ShieldCheck, Skull, Snowflake, Sparkles,
@@ -3871,14 +3871,14 @@ export default function Home() {
                     <div key={dot} className="rounded-full transition-all duration-300" style={{width: dot === 0 ? 20 : 6, height: 6, background: dot === 0 ? '#d4af37' : 'rgba(255,255,255,0.2)'}} />
                   ))}
                 </div>
-                <div className="relative mx-6 mt-2 mb-4 rounded-xl px-5 py-4" style={{background: 'rgba(6,6,6,0.5)', border: '1px solid rgba(212,175,55,0.2)', backdropFilter: 'blur(10px)'}}>
+                <div className="relative mx-6 mt-2 mb-4 rounded-xl px-5 py-4" style={{background: 'rgba(4,4,8,0.92)', border: '1px solid rgba(212,175,55,0.25)', backdropFilter: 'blur(16px)'}}>
                   <div className="absolute top-0 left-10 right-10 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.45), transparent)'}} />
                   <div className="flex items-start gap-3">
                     <span className="shrink-0 rounded px-2 py-0.5 text-[0.62rem] font-black font-cinzel" style={{background: 'rgba(212,175,55,0.15)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.35)'}}>
                       {currentDialogueLine.speaker}
                     </span>
                     <div className="flex-1 min-w-0 relative">
-                      <p className="text-center text-[1rem] font-semibold leading-relaxed" style={{color: '#e8e4d8', textShadow: '0 1px 10px rgba(0,0,0,1)'}}>
+                      <p className="text-center text-[1rem] font-semibold leading-relaxed" style={{color: '#ffffff', textShadow: '0 1px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8)'}}>
                         {dialogueWords.map((word, index) => (
                           <span
                             className={`inline-block transition-all duration-200 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
@@ -3921,8 +3921,8 @@ export default function Home() {
                 {([
                   {icon: Dice5, label: 'Würfeln', sub: 'W20', color: '#d4af37', onClick: rollManualDice},
                   {icon: BookOpen, label: 'Nachschlagen', sub: 'Regelwerk', color: '#94a3b8', onClick: () => setIsDmPanelOpen((o: boolean) => !o)},
-                  {icon: ScrollText, label: 'Untersuchen', sub: 'Umgebung', color: '#94a3b8', onClick: undefined},
-                  {icon: HeartPulse, label: 'Interagieren', sub: 'Objekt / NSC', color: '#94a3b8', onClick: undefined},
+                  {icon: Search, label: 'Untersuchen', sub: 'Umgebung', color: '#94a3b8', onClick: undefined},
+                  {icon: HandMetal, label: 'Interagieren', sub: 'Objekt / NSC', color: '#94a3b8', onClick: undefined},
                 ] as const).map(({icon: Icon, label, sub, color, onClick}) => (
                   <button
                     className="rounded-lg p-2.5 flex flex-col items-start gap-1 transition-all hover:bg-white/10"
@@ -3944,7 +3944,7 @@ export default function Home() {
                   type="button"
                 >
                   <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.06)'}}>
-                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                    <Hourglass className="w-4 h-4 text-slate-400" />
                   </div>
                   <div>
                     <p className="text-[0.7rem] font-bold text-white">Zug Beenden</p>
