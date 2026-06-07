@@ -3,6 +3,8 @@
 import { useRef, useState, useCallback, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Html } from "@react-three/drei";
+import { EffectComposer, Bloom, ChromaticAberration } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
 import * as THREE from "three";
 
 const D20_NUMS = [20, 2, 14, 8, 6, 16, 18, 4, 12, 10, 1, 19, 7, 13, 3, 17, 11, 5, 15, 9];
@@ -10,10 +12,11 @@ const D20_NUMS = [20, 2, 14, 8, 6, 16, 18, 4, 12, 10, 1, 19, 7, 13, 3, 17, 11, 5
 /* Gold tube material shared across all edge cylinders */
 const goldMat = new THREE.MeshStandardMaterial({
   color: new THREE.Color("#c8920a"),
-  emissive: new THREE.Color("#d4a520"),
-  emissiveIntensity: 1.2,
+  emissive: new THREE.Color("#ff9900"),
+  emissiveIntensity: 3.5,
   metalness: 0.9,
   roughness: 0.1,
+  toneMapped: false,
 });
 
 /* Build 30 edge-tube meshes from icosahedron edges */
@@ -99,7 +102,7 @@ function Ring({ r, speed, color, tilt }: { r: number; speed: number; color: stri
   return (
     <mesh ref={ref} rotation={[tilt, 0, 0]}>
       <torusGeometry args={[r, 0.018, 16, 128]} />
-      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={5} toneMapped={false} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={8} toneMapped={false} />
     </mesh>
   );
 }
@@ -204,8 +207,8 @@ function Die20({ isRolling, onRollEnd }: { isRolling: boolean; onRollEnd: () => 
       <mesh geometry={geo}>
         <meshPhysicalMaterial
           color={new THREE.Color("#1a4a9f")}
-          emissive={new THREE.Color("#3b82f6")}
-          emissiveIntensity={0.9}
+          emissive={new THREE.Color("#38bdf8")}
+          emissiveIntensity={2.5}
           metalness={0.05}
           roughness={0.05}
           transmission={0.45}
@@ -250,6 +253,20 @@ function Scene({ isRolling, onRollEnd, onClick }: {
         <sphereGeometry args={[1.8, 16, 16]} />
         <meshBasicMaterial transparent opacity={0} />
       </mesh>
+
+      <EffectComposer>
+        <Bloom
+          intensity={1.8}
+          luminanceThreshold={0.15}
+          luminanceSmoothing={0.6}
+          mipmapBlur
+          radius={0.7}
+        />
+        <ChromaticAberration
+          blendFunction={BlendFunction.NORMAL}
+          offset={[0.0008, 0.0008] as unknown as THREE.Vector2}
+        />
+      </EffectComposer>
     </>
   );
 }
@@ -284,7 +301,7 @@ export default function D20({ onRoll, currentValue }: {
       <div className="relative" style={{ width: 230, height: 230 }}>
         <Canvas
           camera={{ position: [0, 0.3, 6.0], fov: 42 }}
-          gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.6 }}
+          gl={{ alpha: true, antialias: true, toneMapping: THREE.ReinhardToneMapping, toneMappingExposure: 2.2 }}
           style={{ background: "transparent" }}
         >
           <Suspense fallback={null}>
