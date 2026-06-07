@@ -1,173 +1,183 @@
 "use client";
 
 import { useRef, useState, useCallback, useMemo, Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Environment, Html } from "@react-three/drei";
 import * as THREE from "three";
 
-const D20_NUMBERS = [20, 2, 14, 8, 6, 16, 18, 4, 12, 10, 1, 19, 7, 13, 3, 17, 11, 5, 15, 9];
-const COLS = 4;
-const ROWS = 5;
+const D20_NUMS = [20, 2, 14, 8, 6, 16, 18, 4, 12, 10, 1, 19, 7, 13, 3, 17, 11, 5, 15, 9];
 
-/** Per-face UV atlas: each face gets its own cell in a 4×5 grid */
-function buildGeometryWithFaceUV(): THREE.BufferGeometry {
-  const base = new THREE.IcosahedronGeometry(1.5, 0);
-  const cellW = 1 / COLS;
-  const cellH = 1 / ROWS;
-  const m = 0.06;
-  const uvArr = new Float32Array(20 * 3 * 2);
+/* Gold tube material shared across all edge cylinders */
+const goldMat = new THREE.MeshStandardMaterial({
+  color: new THREE.Color("#c8920a"),
+  emissive: new THREE.Color("#d4a520"),
+  emissiveIntensity: 1.2,
+  metalness: 0.9,
+  roughness: 0.1,
+});
 
-  for (let f = 0; f < 20; f++) {
-    const col = f % COLS;
-    const row = Math.floor(f / COLS);
-    const x = col * cellW;
-    const y = row * cellH;
-    const i = f * 6;
-    // bottom-left, bottom-right, top-center – matches triangle winding
-    uvArr[i + 0] = x + m;             uvArr[i + 1] = y + cellH - m;
-    uvArr[i + 2] = x + cellW - m;     uvArr[i + 3] = y + cellH - m;
-    uvArr[i + 4] = x + cellW / 2;     uvArr[i + 5] = y + m;
-  }
-  base.setAttribute("uv", new THREE.BufferAttribute(uvArr, 2));
-  return base;
-}
+/* Build 30 edge-tube meshes from icosahedron edges */
+function EdgeTubes({ parentRef }: { parentRef: React.RefObject<THREE.Group | null> }) {
+  const tubes = useMemo(() => {
+    const base = new THREE.IcosahedronGeometry(1.5, 0);
+    const eGeo = new THREE.EdgesGeometry(base);
+    const pos = eGeo.attributes.position;
+    const meshes: { position: THREE.Vector3; quaternion: THREE.Quaternion; length: number }[] = [];
 
-/** Texture atlas: 4×5 grid, each cell = one die face with number */
-function buildFaceAtlas(): THREE.CanvasTexture {
-  const SIZE = 2048;
-  const cW = SIZE / COLS;
-  const cH = SIZE / ROWS;
-  const canvas = document.createElement("canvas");
-  canvas.width = SIZE; canvas.height = SIZE;
-  const ctx = canvas.getContext("2d")!;
-
-  ctx.fillStyle = "#07102a";
-  ctx.fillRect(0, 0, SIZE, SIZE);
-
-  for (let f = 0; f < 20; f++) {
-    const col = f % COLS;
-    const row = Math.floor(f / COLS);
-    const ox = col * cW;
-    const oy = row * cH;
-    const m = 28;
-
-    // Triangle vertices in canvas coords (matching UV layout)
-    const bL = { x: ox + m,        y: oy + cH - m };
-    const bR = { x: ox + cW - m,   y: oy + cH - m };
-    const tp = { x: ox + cW / 2,   y: oy + m };
-
-    // Face fill
-    ctx.beginPath();
-    ctx.moveTo(bL.x, bL.y);
-    ctx.lineTo(bR.x, bR.y);
-    ctx.lineTo(tp.x, tp.y);
-    ctx.closePath();
-
-    const num = D20_NUMBERS[f];
-    const isMax = num === 20;
-
-    // Inner glow fill
-    const grad = ctx.createLinearGradient(ox, oy + cH, ox, oy);
-    grad.addColorStop(0, "rgba(10,28,80,0.95)");
-    grad.addColorStop(1, "rgba(6,18,55,0.95)");
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    // Gold edge
-    ctx.strokeStyle = isMax ? "rgba(220,170,40,0.9)" : "rgba(180,135,30,0.7)";
-    ctx.lineWidth = isMax ? 5 : 3.5;
-    ctx.stroke();
-
-    // Number
-    const cx = ox + cW / 2;
-    const cy = oy + cH * 0.58;
-    ctx.font = `900 ${cW * 0.28}px 'Georgia', serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.shadowColor = isMax ? "rgba(255,210,0,1)" : "rgba(120,180,255,0.9)";
-    ctx.shadowBlur = isMax ? 40 : 24;
-    ctx.fillStyle = isMax ? "#ffe066" : "#c7e0ff";
-    ctx.fillText(String(num), cx, cy);
-
-    // Underline for 6 and 9
-    if (num === 6 || num === 9) {
-      ctx.beginPath();
-      ctx.moveTo(cx - 10, cy + cW * 0.15);
-      ctx.lineTo(cx + 10, cy + cW * 0.15);
-      ctx.strokeStyle = ctx.fillStyle;
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
+    for (let i = 0; i < pos.count; i += 2) {
+      const v0 = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
+      const v1 = new THREE.Vector3(pos.getX(i + 1), pos.getY(i + 1), pos.getZ(i + 1));
+      const mid = v0.clone().add(v1).multiplyScalar(0.5);
+      const length = v0.distanceTo(v1);
+      const dir = v1.clone().sub(v0).normalize();
+      const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+      meshes.push({ position: mid, quaternion: q, length });
     }
-  }
+    base.dispose(); eGeo.dispose();
+    return meshes;
+  }, []);
 
-  const t = new THREE.CanvasTexture(canvas);
-  t.needsUpdate = true;
-  return t;
-}
-
-/** Rotating rune floor circle */
-function buildRuneTex(): THREE.CanvasTexture {
-  const S = 512;
-  const canvas = document.createElement("canvas");
-  canvas.width = S; canvas.height = S;
-  const ctx = canvas.getContext("2d")!;
-  const cx = S / 2, cy = S / 2;
-
-  [[230,0.4],[200,0.3],[165,0.25],[130,0.18]].forEach(([r, a]: number[]) => {
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(59,130,246,${a})`; ctx.lineWidth = 1.5; ctx.stroke();
+  useFrame(() => {
+    if (parentRef.current) {
+      // tubes group rotation is handled by parent ref sync in Die20
+    }
   });
-  for (let i = 0; i < 16; i++) {
-    const a = (i / 16) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.moveTo(cx + Math.cos(a) * 132, cy + Math.sin(a) * 132);
-    ctx.lineTo(cx + Math.cos(a) * 228, cy + Math.sin(a) * 228);
-    ctx.strokeStyle = "rgba(59,130,246,0.22)"; ctx.lineWidth = 1; ctx.stroke();
-  }
-  const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 140);
-  grd.addColorStop(0, "rgba(29,78,216,0.35)");
-  grd.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(cx, cy, 140, 0, Math.PI * 2); ctx.fill();
-  return new THREE.CanvasTexture(canvas);
-}
 
-function RuneRing({ radius, speed, color, tiltX = 0.3 }: {
-  radius: number; speed: number; color: string; tiltX?: number;
-}) {
-  const ref = useRef<THREE.Mesh>(null);
-  useFrame((_, dt) => { if (ref.current) ref.current.rotation.y += dt * speed; });
   return (
-    <mesh ref={ref} rotation={[tiltX, 0, 0]}>
-      <torusGeometry args={[radius, 0.016, 16, 128]} />
-      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={5} toneMapped={false} />
-    </mesh>
+    <>
+      {tubes.map((t, i) => (
+        <mesh key={i} position={t.position} quaternion={t.quaternion}>
+          <cylinderGeometry args={[0.038, 0.038, t.length, 8]} />
+          <primitive object={goldMat} />
+        </mesh>
+      ))}
+    </>
   );
 }
 
+/* Rune circle on the floor */
 function RuneFloor() {
   const ref = useRef<THREE.Mesh>(null);
-  const tex = useMemo(() => (typeof document !== "undefined" ? buildRuneTex() : null), []);
   useFrame((_, dt) => { if (ref.current) ref.current.rotation.z += dt * 0.07; });
+
+  const tex = useMemo(() => {
+    if (typeof document === "undefined") return null;
+    const S = 512; const c = document.createElement("canvas");
+    c.width = S; c.height = S;
+    const ctx = c.getContext("2d")!;
+    const cx = S / 2, cy = S / 2;
+    [[230, 0.55], [198, 0.4], [162, 0.3], [125, 0.22]].forEach(([r, a]) => {
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(56,189,248,${a})`; ctx.lineWidth = 2; ctx.stroke();
+    });
+    for (let k = 0; k < 16; k++) {
+      const a = (k / 16) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * 128, cy + Math.sin(a) * 128);
+      ctx.lineTo(cx + Math.cos(a) * 228, cy + Math.sin(a) * 228);
+      ctx.strokeStyle = "rgba(56,189,248,0.28)"; ctx.lineWidth = 1; ctx.stroke();
+    }
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 140);
+    g.addColorStop(0, "rgba(29,120,216,0.4)"); g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, 140, 0, Math.PI * 2); ctx.fill();
+    return new THREE.CanvasTexture(c);
+  }, []);
+
   if (!tex) return null;
   return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.9, 0]}>
-      <circleGeometry args={[2.6, 64]} />
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.95, 0]}>
+      <circleGeometry args={[2.7, 64]} />
       <meshBasicMaterial map={tex} transparent alphaTest={0.01} depthWrite={false} />
     </mesh>
   );
 }
 
+/* Orbiting ring */
+function Ring({ r, speed, color, tilt }: { r: number; speed: number; color: string; tilt: number }) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((_, dt) => { if (ref.current) ref.current.rotation.y += dt * speed; });
+  return (
+    <mesh ref={ref} rotation={[tilt, 0, 0]}>
+      <torusGeometry args={[r, 0.018, 16, 128]} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={5} toneMapped={false} />
+    </mesh>
+  );
+}
+
+/* Face number HTML overlays - positioned at each face centroid in 3D space */
+function FaceNumbers({ meshGroupRef }: { meshGroupRef: React.RefObject<THREE.Group | null> }) {
+  const { camera } = useThree();
+  const [visibleFaces, setVisibleFaces] = useState<{ num: number; pos: THREE.Vector3; opacity: number }[]>([]);
+
+  const centroids = useMemo(() => {
+    const g = new THREE.IcosahedronGeometry(1.5, 0);
+    const pos = g.attributes.position;
+    const result: THREE.Vector3[] = [];
+    for (let i = 0; i < 20; i++) {
+      const a = new THREE.Vector3(pos.getX(i * 3), pos.getY(i * 3), pos.getZ(i * 3));
+      const b = new THREE.Vector3(pos.getX(i * 3 + 1), pos.getY(i * 3 + 1), pos.getZ(i * 3 + 1));
+      const cc = new THREE.Vector3(pos.getX(i * 3 + 2), pos.getY(i * 3 + 2), pos.getZ(i * 3 + 2));
+      result.push(a.add(b).add(cc).divideScalar(3).normalize().multiplyScalar(1.55));
+    }
+    g.dispose();
+    return result;
+  }, []);
+
+  useFrame(() => {
+    if (!meshGroupRef.current) return;
+    const mat = meshGroupRef.current.matrixWorld;
+    const camPos = camera.position;
+
+    const faces = centroids.map((c, i) => {
+      const wp = c.clone().applyMatrix4(mat);
+      const normal = wp.clone().normalize();
+      const toCam = camPos.clone().sub(wp);
+      const dot = toCam.normalize().dot(normal);
+      return { num: D20_NUMS[i], pos: wp, dot };
+    })
+      .filter(f => f.dot > 0.1)
+      .sort((a, b) => b.dot - a.dot)
+      .slice(0, 5) // show max 5 front-facing faces
+      .map(f => ({ num: f.num, pos: f.pos, opacity: Math.min(1, (f.dot - 0.1) / 0.5) }));
+
+    setVisibleFaces(faces);
+  });
+
+  return (
+    <>
+      {visibleFaces.map((f, i) => (
+        <Html key={`${f.num}-${i}`} position={[f.pos.x, f.pos.y, f.pos.z]} center zIndexRange={[0, 0]}>
+          <span style={{
+            fontFamily: "'Georgia', serif",
+            fontWeight: 900,
+            fontSize: f.num === 20 ? "18px" : "14px",
+            color: f.num === 20 ? "#ffe066" : "#93c5fd",
+            textShadow: f.num === 20
+              ? "0 0 12px rgba(255,210,0,1), 0 0 24px rgba(255,180,0,0.7)"
+              : "0 0 8px rgba(100,180,255,0.9)",
+            opacity: f.opacity,
+            pointerEvents: "none",
+            userSelect: "none",
+            display: "block",
+            lineHeight: 1,
+          }}>
+            {f.num}
+          </span>
+        </Html>
+      ))}
+    </>
+  );
+}
+
+/* Main die group */
 function Die20({ isRolling, onRollEnd }: { isRolling: boolean; onRollEnd: () => void }) {
-  const mesh = useRef<THREE.Mesh>(null);
-  const edgeMesh = useRef<THREE.LineSegments>(null);
+  const groupRef = useRef<THREE.Group>(null);
   const state = useRef({ spd: 0, stopping: false });
 
-  const geo  = useMemo(buildGeometryWithFaceUV, []);
-  const eGeo = useMemo(() => new THREE.EdgesGeometry(geo), [geo]);
-  const tex  = useMemo(() => (typeof document !== "undefined" ? buildFaceAtlas() : null), []);
+  const geo = useMemo(() => new THREE.IcosahedronGeometry(1.5, 0), []);
 
   useFrame((_, dt) => {
-    if (!mesh.current) return;
+    if (!groupRef.current) return;
     if (isRolling) {
       state.current.stopping = false;
       state.current.spd = Math.min(state.current.spd + dt * 12, 16);
@@ -179,37 +189,37 @@ function Die20({ isRolling, onRollEnd }: { isRolling: boolean; onRollEnd: () => 
     }
     const s = state.current.spd;
     if (s > 0) {
-      mesh.current.rotation.x += dt * s * 0.7;
-      mesh.current.rotation.y += dt * s;
-      mesh.current.rotation.z += dt * s * 0.4;
+      groupRef.current.rotation.x += dt * s * 0.7;
+      groupRef.current.rotation.y += dt * s;
+      groupRef.current.rotation.z += dt * s * 0.4;
     } else {
-      mesh.current.rotation.y += dt * 0.28;
-      mesh.current.rotation.x = THREE.MathUtils.lerp(mesh.current.rotation.x, 0.3, dt * 0.8);
+      groupRef.current.rotation.y += dt * 0.28;
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, 0.3, dt * 0.8);
     }
-    if (edgeMesh.current) edgeMesh.current.rotation.copy(mesh.current.rotation);
   });
 
   return (
-    <group>
-      <mesh ref={mesh} geometry={geo}>
+    <group ref={groupRef}>
+      {/* Die face - crystal blue glowing */}
+      <mesh geometry={geo}>
         <meshPhysicalMaterial
-          map={tex ?? undefined}
-          metalness={0.8}
-          roughness={0.12}
-          clearcoat={1}
-          clearcoatRoughness={0.08}
-          emissive={new THREE.Color(0x050e30)}
-          emissiveIntensity={0.5}
-          envMapIntensity={2.5}
+          color={new THREE.Color("#1a4a9f")}
+          emissive={new THREE.Color("#3b82f6")}
+          emissiveIntensity={0.9}
+          metalness={0.05}
+          roughness={0.05}
+          transmission={0.45}
+          ior={1.6}
+          thickness={0.5}
+          transparent
+          opacity={0.88}
+          envMapIntensity={1.5}
         />
       </mesh>
-      <lineSegments ref={edgeMesh} geometry={eGeo}>
-        <lineBasicMaterial color="#c8a028" linewidth={2} />
-      </lineSegments>
-      {/* subtle gold outline glow */}
-      <mesh geometry={geo} scale={1.015}>
-        <meshBasicMaterial color="#b8860b" transparent opacity={0.06} side={THREE.BackSide} />
-      </mesh>
+      {/* Gold edge tubes */}
+      <EdgeTubes parentRef={groupRef} />
+      {/* Face number HTML overlays */}
+      <FaceNumbers meshGroupRef={groupRef} />
     </group>
   );
 }
@@ -219,20 +229,23 @@ function Scene({ isRolling, onRollEnd, onClick }: {
 }) {
   return (
     <>
-      <Environment preset="night" />
-      <ambientLight intensity={0.35} />
-      <pointLight position={[0, 5, 5]}  intensity={18} color="#93c5fd" decay={2} />
-      <pointLight position={[-4, 2, 3]} intensity={12} color="#4f46e5" decay={2} />
-      <pointLight position={[4, -2, 3]} intensity={9}  color="#3b82f6" decay={2} />
-      <pointLight position={[0, -3, 2]} intensity={6}  color="#7c3aed" decay={2} />
-      <pointLight position={[0, 4, 1]}  intensity={6}  color="#fbbf24" decay={2} />
+      <Environment preset="city" />
+      <ambientLight intensity={0.3} />
+      {/* Blue inner glow lights */}
+      <pointLight position={[0, 0, 3]}  intensity={20} color="#60a5fa" decay={2} />
+      <pointLight position={[0, 3, 2]}  intensity={12} color="#38bdf8" decay={2} />
+      <pointLight position={[-3, 0, 2]} intensity={10} color="#818cf8" decay={2} />
+      <pointLight position={[3, -1, 2]} intensity={8}  color="#3b82f6" decay={2} />
+      {/* Gold warm light from above */}
+      <pointLight position={[0, 5, 3]}  intensity={8}  color="#fbbf24" decay={2} />
 
-      <RuneRing radius={2.55} speed={0.17}  color="#3b82f6" tiltX={0.2}  />
-      <RuneRing radius={2.88} speed={-0.09} color="#6366f1" tiltX={-0.55}/>
-      <RuneRing radius={2.22} speed={0.3}   color="#60a5fa" tiltX={1.1}  />
+      <Ring r={2.6}  speed={0.18}  color="#22d3ee" tilt={0.2}  />
+      <Ring r={2.9}  speed={-0.1}  color="#818cf8" tilt={-0.55}/>
+      <Ring r={2.25} speed={0.32}  color="#38bdf8" tilt={1.1}  />
+
       <RuneFloor />
-
       <Die20 isRolling={isRolling} onRollEnd={onRollEnd} />
+
       <mesh onClick={onClick}>
         <sphereGeometry args={[1.8, 16, 16]} />
         <meshBasicMaterial transparent opacity={0} />
@@ -266,12 +279,12 @@ export default function D20({ onRoll, currentValue }: {
       style={{ background: "linear-gradient(to bottom, transparent, rgba(0,3,20,0.97))" }}
     >
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse at 50% 52%, rgba(29,78,216,0.5) 0%, rgba(79,70,229,0.22) 48%, transparent 72%)"
+        background: "radial-gradient(ellipse at 50% 50%, rgba(29,78,216,0.55) 0%, rgba(56,189,248,0.18) 45%, transparent 70%)"
       }} />
       <div className="relative" style={{ width: 230, height: 230 }}>
         <Canvas
-          camera={{ position: [0, 0.4, 6.2], fov: 42 }}
-          gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.9 }}
+          camera={{ position: [0, 0.3, 6.0], fov: 42 }}
+          gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.6 }}
           style={{ background: "transparent" }}
         >
           <Suspense fallback={null}>
