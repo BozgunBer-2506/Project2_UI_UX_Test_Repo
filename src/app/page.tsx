@@ -2465,10 +2465,10 @@ export default function Home() {
         <div className="flex items-center shrink-0 ml-auto">
           {/* Icon buttons */}
           <div className="flex items-center gap-1 mr-3">
-            <button className="w-8 h-8 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors" type="button" title="Würfeln">
+            <button className="w-8 h-8 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors" onClick={rollManualDice} type="button" title="Würfeln">
               <Dice5 className="w-4 h-4" />
             </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors" type="button" title="Regelwerk">
+            <button className="w-8 h-8 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors" onClick={() => setIsDmPanelOpen((o) => !o)} type="button" title="Regelwerk">
               <BookOpen className="w-4 h-4" />
             </button>
             <button className="w-8 h-8 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors" onClick={() => setIsLogPanelOpen((o) => !o)} type="button" title="Einstellungen">
