@@ -3918,83 +3918,60 @@ export default function Home() {
             {/* Narrative overlay - absolute bottom inside scene image */}
             {!isCharacterSelection ? (
               <div className="absolute bottom-0 left-0 right-0 z-20" style={{background: 'linear-gradient(to top, rgba(2,2,2,0.99) 0%, rgba(2,2,2,0.92) 55%, rgba(2,2,2,0.4) 82%, transparent 100%)'}}>
-                <div className="flex justify-center gap-1.5 pt-2">
-                  {[0,1,2,3].map((dot) => (
-                    <div key={dot} className="rounded-full transition-all duration-300" style={{width: dot === 0 ? 20 : 6, height: 6, background: dot === 0 ? '#d4af37' : 'rgba(255,255,255,0.2)'}} />
-                  ))}
-                </div>
+                {/* Cinematic subtitle */}
                 <div
-                  className="relative mx-auto mt-1 cursor-pointer"
+                  className="px-8 pb-5 pt-3 cursor-pointer"
                   onClick={() => { if (!isDialogueFullyVisible) setVisibleWordCount(dialogueWords.length); }}
-                  style={{
-                    maxWidth: '640px',
-                    background: 'rgba(6,5,14,0.97)',
-                    border: '1px solid rgba(180,140,40,0.5)',
-                    borderRadius: '10px',
-                    boxShadow: '0 0 40px rgba(0,0,0,0.95), 0 0 0 1px rgba(180,140,40,0.06)',
-                  }}
                 >
-                  {/* Gothic corner decorations */}
-                  {(['top-[-1px] left-[-1px]','top-[-1px] right-[-1px]','bottom-[-1px] left-[-1px]','bottom-[-1px] right-[-1px]'] as const).map((pos) => (
-                    <span key={pos} className={`absolute w-3 h-3 ${pos}`} style={{
-                      borderColor: '#c9a84c',
-                      borderStyle: 'solid',
-                      borderWidth: pos.includes('top') && pos.includes('left') ? '2px 0 0 2px' : pos.includes('top') ? '2px 2px 0 0' : pos.includes('left') ? '0 0 2px 2px' : '0 2px 2px 0',
-                      borderRadius: pos.includes('top') && pos.includes('left') ? '8px 0 0 0' : pos.includes('top') ? '0 8px 0 0' : pos.includes('left') ? '0 0 0 8px' : '0 0 8px 0',
-                    }} />
-                  ))}
+                  {/* Speaker label — small, gold, centered */}
+                  <p className="text-center mb-1.5 text-[0.52rem] font-cinzel uppercase tracking-[0.3em]" style={{color: 'rgba(201,168,76,0.7)'}}>
+                    {currentDialogueLine.speaker}
+                  </p>
 
-                  <div className="px-7 pt-4 pb-4">
-                    {/* Speaker */}
-                    <div className="mb-2">
-                      <span className="px-2 py-0.5 text-[0.56rem] font-black font-cinzel tracking-[0.22em] uppercase" style={{background: 'rgba(180,140,40,0.15)', color: '#c9a84c', border: '1px solid rgba(180,140,40,0.35)', borderRadius: '3px'}}>
-                        {currentDialogueLine.speaker}
+                  {/* Dialogue text — cinematic, centered */}
+                  <p className="text-center font-semibold leading-[1.75]" style={{fontSize: '1.05rem', color: '#f0e6cc', textShadow: '0 2px 16px rgba(0,0,0,1), 0 0 40px rgba(0,0,0,0.9)', whiteSpace: 'pre-wrap', letterSpacing: '0.015em'}}>
+                    {dialogueWords.map((word, index) => (
+                      <span
+                        className={`transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
+                        key={`${word}-${index}`}
+                      >
+                        {word + (index < dialogueWords.length - 1 ? ' ' : '')}
                       </span>
-                    </div>
+                    ))}
+                  </p>
 
-                    {/* Main text - centered, warm cream */}
-                    <p className="text-center text-lg font-semibold leading-[1.8]" style={{color: '#ecddb8', textShadow: '0 1px 12px rgba(0,0,0,0.95)', whiteSpace: 'pre-wrap', letterSpacing: '0.01em'}}>
-                      {dialogueWords.map((word, index) => (
-                        <span
-                          className={`transition-opacity duration-200 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
-                          key={`${word}-${index}`}
-                        >
-                          {word + (index < dialogueWords.length - 1 ? ' ' : '')}
-                        </span>
-                      ))}
-                    </p>
-
-                    <div className="mt-3 flex items-center justify-between min-h-[1.75rem]">
-                      {!isDialogueFullyVisible ? (
-                        <p className="text-[0.5rem] animate-pulse font-cinzel tracking-[0.35em] uppercase" style={{color: 'rgba(180,140,40,0.35)'}}>Klicken zum Überspringen</p>
-                      ) : !isLastDialogueLine ? (
-                        <button
-                          aria-label="Continue"
-                          className="ml-auto flex items-center gap-1.5 px-5 py-1.5 text-[0.65rem] font-bold font-cinzel tracking-[0.15em] uppercase transition-all hover:brightness-110 active:scale-95"
-                          onClick={(e) => { e.stopPropagation(); continueDialogue(); }}
-                          style={{
-                            background: 'linear-gradient(135deg, #c9a84c 0%, #9a6e1e 100%)',
-                            color: '#150c00',
-                            borderRadius: '4px',
-                            boxShadow: '0 0 14px rgba(180,140,40,0.45), inset 0 1px 0 rgba(255,225,120,0.25)',
-                          }}
-                          type="button"
-                        >
-                          Weiter <ChevronRight className="w-3 h-3" />
-                        </button>
-                      ) : null}
-                    </div>
+                  {/* Weiter / skip */}
+                  <div className="mt-3 flex justify-center min-h-[1.5rem]">
+                    {!isDialogueFullyVisible ? (
+                      <p className="text-[0.44rem] animate-pulse font-cinzel tracking-[0.3em] uppercase" style={{color: 'rgba(201,168,76,0.3)'}}>Tippen zum Überspringen</p>
+                    ) : !isLastDialogueLine ? (
+                      <button
+                        aria-label="Continue"
+                        className="flex items-center gap-1 px-5 py-1.5 text-[0.6rem] font-bold font-cinzel tracking-[0.18em] uppercase transition-all hover:brightness-110 active:scale-95"
+                        onClick={(e) => { e.stopPropagation(); continueDialogue(); }}
+                        style={{
+                          background: 'linear-gradient(135deg, #c9a84c 0%, #9a6e1e 100%)',
+                          color: '#150c00',
+                          borderRadius: '3px',
+                          boxShadow: '0 0 18px rgba(180,140,40,0.5)',
+                        }}
+                        type="button"
+                      >
+                        Weiter <ChevronRight className="w-3 h-3" />
+                      </button>
+                    ) : null}
                   </div>
                 </div>
+
+                {/* Story choices */}
                 {isLastDialogueLine && isDialogueFullyVisible && !isCombatScene && currentScene.choices.length > 0 ? (
-                  <div className="mx-auto mt-2 mb-3 space-y-1.5" style={{maxWidth:'640px', paddingLeft:'1.5rem', paddingRight:'1.5rem'}}>
-                    <p className="text-[0.55rem] uppercase tracking-[0.2em] text-center mb-1.5" style={{color: 'rgba(212,175,55,0.55)'}}>Deine Entscheidung</p>
+                  <div className="px-8 pb-4 space-y-1.5">
                     {currentScene.choices.map((choice) => (
                       <button
-                        className="w-full rounded-lg px-4 py-2.5 text-left text-sm font-semibold text-slate-100 transition-all hover:border-amber-400/70 hover:bg-amber-500/10"
+                        className="w-full rounded px-4 py-2 text-left text-sm font-semibold text-slate-100 transition-all"
                         key={choice.id}
                         onClick={() => chooseAction(choice)}
-                        style={{background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)'}}
+                        style={{background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(201,168,76,0.25)', backdropFilter: 'blur(4px)'}}
                         type="button"
                       >
                         <span className="mr-2" style={{color: '#d4af37'}}>›</span>
