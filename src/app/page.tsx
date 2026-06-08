@@ -2424,8 +2424,19 @@ export default function Home() {
           </div>
           <nav className="hidden lg:flex items-center gap-0.5">
             {['Kampagne', 'Karte', 'Notizen', 'Bestiarium', 'Handouts'].map((tab) => (
-              <button key={tab} className={`px-3 py-1.5 text-[0.68rem] font-semibold rounded uppercase tracking-wider transition-colors ${tab === 'Kampagne' ? 'text-white bg-white/10' : 'text-slate-500 hover:text-white hover:bg-white/5'}`} type="button">
+              <button
+                key={tab}
+                className={`px-3 py-1.5 text-[0.68rem] font-bold font-cinzel rounded uppercase tracking-[0.12em] transition-all relative ${
+                  tab === 'Kampagne'
+                    ? 'text-[#d4af37]'
+                    : 'text-slate-500 hover:text-slate-200 hover:bg-white/5'
+                }`}
+                type="button"
+              >
                 {tab}
+                {tab === 'Kampagne' && (
+                  <span className="absolute bottom-0 left-3 right-3 h-px" style={{background: 'rgba(212,175,55,0.6)'}} />
+                )}
               </button>
             ))}
           </nav>
@@ -2472,8 +2483,8 @@ export default function Home() {
               <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-green-400 border border-black" />
             </div>
             <div className="text-left hidden sm:block">
-              <p className="text-[0.65rem] font-bold text-white leading-none">Spielmeister</p>
-              <p className="text-[0.55rem] text-slate-500 leading-none mt-0.5">DM</p>
+              <p className="text-[0.65rem] font-bold font-cinzel text-white leading-none">Spielmeister</p>
+              <p className="text-[0.55rem] font-cinzel text-slate-500 leading-none mt-0.5 tracking-wider">DM</p>
             </div>
             <ChevronDown className="w-3 h-3 text-slate-500" />
           </button>
