@@ -2504,7 +2504,7 @@ export default function Home() {
       </header>
 
       {/* MAIN 3-COLUMN */}
-      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[280px_1fr_260px]">
+      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[260px_1fr_320px]">
           {/* LEFT SIDEBAR */}
           <aside className="hidden lg:flex flex-col min-h-0 overflow-y-auto border-r border-white/[0.07]" style={{background: 'rgba(8,8,8,0.7)', backdropFilter: 'blur(8px)'}}>
             {/* Character name header */}
@@ -3939,14 +3939,14 @@ export default function Home() {
           {/* RIGHT SIDEBAR */}
           <aside className="hidden lg:flex flex-col min-h-0 overflow-hidden border-l border-white/[0.07]" style={{background: 'rgba(8,8,8,0.7)', backdropFilter: 'blur(8px)'}}>
             {/* Spieler-Aktionen */}
-            <div className="px-3 pt-3 pb-2 border-b border-white/[0.07] shrink-0">
-              <div className="flex items-center gap-1.5 mb-2.5">
+            <div className="px-4 pt-4 pb-3 border-b border-white/[0.07] shrink-0">
+              <div className="flex items-center gap-1.5 mb-3">
                 <div className="flex-1 h-px" style={{background: 'rgba(212,175,55,0.15)'}} />
-                <p className="text-[0.55rem] font-bold uppercase tracking-[0.28em] text-slate-500 font-cinzel">Spieler-Aktionen</p>
+                <p className="text-[0.65rem] font-bold uppercase tracking-[0.28em] text-slate-500 font-cinzel">Spieler-Aktionen</p>
                 <div className="w-1 h-1 rotate-45" style={{background: 'rgba(212,175,55,0.4)'}} />
                 <div className="flex-1 h-px" style={{background: 'rgba(212,175,55,0.15)'}} />
               </div>
-              <div className="grid grid-cols-2 gap-1.5">
+              <div className="grid grid-cols-2 gap-2">
                 {([
                   {icon: Dice5, label: 'Würfeln', sub: 'W20', color: '#d4af37', onClick: rollManualDice},
                   {icon: BookOpen, label: 'Nachschlagen', sub: 'Regelwerk', color: '#94a3b8', onClick: () => setIsDmPanelOpen((o: boolean) => !o)},
@@ -3954,30 +3954,30 @@ export default function Home() {
                   {icon: HandMetal, label: 'Interagieren', sub: 'Objekt / NSC', color: '#94a3b8', onClick: undefined},
                 ] as const).map(({icon: Icon, label, sub, color, onClick}) => (
                   <button
-                    className="rounded-lg p-2.5 flex flex-col items-start gap-1 transition-all hover:bg-white/10"
+                    className="rounded-lg p-3 flex flex-col items-start gap-1.5 transition-all hover:bg-white/10"
                     key={label}
                     onClick={onClick}
                     style={{background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)'}}
                     type="button"
                   >
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.07)'}}>
-                      <Icon className="w-3.5 h-3.5" style={{color}} />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.07)'}}>
+                      <Icon className="w-4 h-4" style={{color}} />
                     </div>
-                    <p className="text-[0.68rem] font-bold text-white leading-tight">{label}</p>
-                    <p className="text-[0.56rem] text-slate-600 leading-tight">{sub}</p>
+                    <p className="text-xs font-bold text-white leading-tight">{label}</p>
+                    <p className="text-[0.65rem] text-slate-500 leading-tight">{sub}</p>
                   </button>
                 ))}
                 <button
-                  className="col-span-2 rounded-lg p-3 flex items-center gap-2.5 transition-all hover:bg-white/10"
+                  className="col-span-2 rounded-lg p-3.5 flex items-center gap-3 transition-all hover:bg-white/10"
                   style={{background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)'}}
                   type="button"
                 >
-                  <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.06)'}}>
-                    <Hourglass className="w-4 h-4 text-slate-400" />
+                  <div className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.06)'}}>
+                    <Hourglass className="w-5 h-5 text-slate-400" />
                   </div>
                   <div>
-                    <p className="text-[0.7rem] font-bold text-white">Zug Beenden</p>
-                    <p className="text-[0.58rem] text-slate-600">Runde beenden</p>
+                    <p className="text-sm font-bold text-white">Zug Beenden</p>
+                    <p className="text-[0.65rem] text-slate-500">Runde beenden</p>
                   </div>
                 </button>
               </div>
@@ -3985,31 +3985,28 @@ export default function Home() {
 
             {/* Story choices in right panel */}
             {!isCharacterSelection && !isCombatScene && isLastDialogueLine && isDialogueFullyVisible ? (
-              <div className="px-3 py-3 border-b border-white/[0.07] space-y-1.5 shrink-0">
-                <p className="text-[0.58rem] uppercase tracking-wider text-slate-600 mb-2">Aktionen</p>
+              <div className="px-4 py-3 border-b border-white/[0.07] space-y-2 shrink-0">
+                <p className="text-[0.65rem] uppercase tracking-wider text-slate-500 mb-2">Aktionen</p>
                 {currentScene.choices.map((choice) => renderChoiceButton(choice))}
               </div>
             ) : null}
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-0">
-              <p className="hidden text-xs uppercase tracking-[0.18em] text-ember-300">
-                Spieleraktionen (legacy)
-              </p>
+            <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 space-y-3">
               {isCombatScene && visibleInitiativeOrder.length === 0 ? (
-                <div className="space-y-2 rounded-md border border-ember-400/35 bg-ember-500/10 p-3">
+                <div className="space-y-3 rounded-md border border-ember-400/35 bg-ember-500/10 p-4">
                   <div>
-                    <p className="text-sm font-black text-ember-100">
+                    <p className="text-base font-black text-ember-100">
                       Initiative starten
                     </p>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
                       {initiativeStatus} Würfle Ryu und Ayane. Danach wird die
                       Reihenfolge aufgebaut und der erste Zug erscheint hier.
                     </p>
                   </div>
-                  <div className="grid gap-2">
+                  <div className="grid gap-2.5">
                     {activeCharacter ? (
                       <button
-                        className="rounded-md border border-ember-400/55 bg-ember-500 px-3 py-2 text-left text-xs font-black text-ink-950 shadow-glow transition hover:border-ember-200 hover:bg-ember-400 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.06] disabled:text-slate-500 disabled:shadow-none"
+                        className="rounded-md border border-ember-400/55 bg-ember-500 px-4 py-3 text-left text-sm font-black text-ink-950 shadow-glow transition hover:border-ember-200 hover:bg-ember-400 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.06] disabled:text-slate-500 disabled:shadow-none"
                         disabled={initiativeRolls[activeCharacter.id] !== undefined}
                         onClick={() =>
                           rollFormula(
@@ -4028,7 +4025,7 @@ export default function Home() {
                     ) : null}
                     {activeNpc ? (
                       <button
-                        className="rounded-md border border-white/10 bg-white/[0.06] px-3 py-2 text-left text-xs font-black text-slate-100 transition hover:border-ember-400/70 hover:bg-ember-500/15 disabled:cursor-not-allowed disabled:text-slate-500"
+                        className="rounded-md border border-white/10 bg-white/[0.06] px-4 py-3 text-left text-sm font-black text-slate-100 transition hover:border-ember-400/70 hover:bg-ember-500/15 disabled:cursor-not-allowed disabled:text-slate-500"
                         disabled={initiativeRolls[activeNpc.id] !== undefined}
                         onClick={() =>
                           rollFormula(
@@ -4049,21 +4046,21 @@ export default function Home() {
                 </div>
               ) : null}
               {isCombatScene && visibleInitiativeOrder.length > 0 ? (
-                <div className="space-y-2 rounded-md border border-white/10 bg-white/[0.04] p-2">
+                <div className="space-y-2.5 rounded-md border border-white/10 bg-white/[0.04] p-3">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-ember-300">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-ember-300">
                       Initiative
                     </p>
                     {combatRoundState.round > 0 ? (
-                      <span className="rounded border border-ember-400/35 bg-ember-500/10 px-2 py-1 text-[0.62rem] font-black text-ember-100">
+                      <span className="rounded border border-ember-400/35 bg-ember-500/10 px-2.5 py-1 text-xs font-black text-ember-100">
                         Runde {combatRoundState.round}
                       </span>
                     ) : null}
                   </div>
-                  <div className="grid gap-1">
+                  <div className="grid gap-1.5">
                     {visibleInitiativeOrder.map((actor, index) => (
                       <div
-                        className={`grid grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md border px-2 py-1.5 text-[0.68rem] font-bold ${
+                        className={`grid grid-cols-[1.75rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md border px-2.5 py-2 text-xs font-bold ${
                           actor.id === combatRoundState.activeActorId
                             ? "border-ember-400 bg-ember-500 text-ink-950 shadow-glow"
                             : actor.kind === "enemy"
@@ -4072,12 +4069,12 @@ export default function Home() {
                         }`}
                         key={actor.id}
                       >
-                        <span className="grid size-5 place-items-center rounded border border-current/25 text-[0.62rem]">
+                        <span className="grid size-6 place-items-center rounded border border-current/25 text-[0.65rem]">
                           {index + 1}
                         </span>
                         <span className="min-w-0">
                           <span className="block truncate">{actor.name}</span>
-                          <span className="block text-[0.55rem] font-black uppercase tracking-[0.1em] opacity-70">
+                          <span className="block text-[0.62rem] font-black uppercase tracking-[0.1em] opacity-70">
                             {actor.id === combatRoundState.activeActorId
                               ? "Am Zug"
                               : actor.kind === "enemy"
@@ -4087,7 +4084,7 @@ export default function Home() {
                                   : "Held"}
                           </span>
                         </span>
-                        <span className="rounded border border-current/20 px-1.5 py-0.5 text-[0.62rem] font-black">
+                        <span className="rounded border border-current/20 px-2 py-0.5 text-xs font-black">
                           {actor.total !== undefined ? actor.total : "DM"}
                         </span>
                       </div>
