@@ -3892,37 +3892,54 @@ export default function Home() {
                   ))}
                 </div>
                 <div
-                  className="relative mx-6 mt-2 rounded-xl px-5 py-3 cursor-pointer"
+                  className="relative mx-4 mt-2 rounded-xl cursor-pointer"
                   onClick={() => { if (!isDialogueFullyVisible) setVisibleWordCount(dialogueWords.length); }}
-                  style={{background: 'rgba(4,4,8,0.93)', border: '1px solid rgba(212,175,55,0.25)'}}
+                  style={{
+                    background: 'rgba(4,6,16,0.96)',
+                    border: '1px solid rgba(212,175,55,0.35)',
+                    boxShadow: '0 0 40px rgba(0,0,0,0.8), 0 0 20px rgba(212,175,55,0.08), inset 0 1px 0 rgba(212,175,55,0.15)',
+                  }}
                 >
-                  <div className="absolute top-0 left-10 right-10 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.45), transparent)'}} />
-                  <div className="flex items-start gap-3">
-                    <span className="shrink-0 rounded px-2 py-0.5 text-[0.62rem] font-black font-cinzel mt-0.5" style={{background: 'rgba(212,175,55,0.15)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.35)'}}>
-                      {currentDialogueLine.speaker}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-center text-[0.95rem] font-semibold leading-relaxed" style={{color: '#ffffff', textShadow: '0 1px 10px rgba(0,0,0,1)', whiteSpace: 'pre-wrap'}}>
-                        {dialogueWords.map((word, index) => (
-                          <span
-                            className={`transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
-                            key={`${word}-${index}`}
-                          >
-                            {word + (index < dialogueWords.length - 1 ? ' ' : '')}
-                          </span>
-                        ))}
-                      </p>
+                  {/* Top gold line */}
+                  <div className="absolute top-0 left-16 right-16 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.7), transparent)'}} />
+                  {/* Bottom gold line */}
+                  <div className="absolute bottom-0 left-16 right-16 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)'}} />
+
+                  <div className="px-8 pt-4 pb-4">
+                    {/* Speaker */}
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                      <div className="h-px flex-1" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.3))'}} />
+                      <span className="px-3 py-0.5 rounded text-[0.6rem] font-black font-cinzel tracking-[0.2em] uppercase" style={{background: 'rgba(212,175,55,0.12)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.3)'}}>
+                        {currentDialogueLine.speaker}
+                      </span>
+                      <div className="h-px flex-1" style={{background: 'linear-gradient(90deg, rgba(212,175,55,0.3), transparent)'}} />
+                    </div>
+
+                    {/* Text */}
+                    <p className="text-center text-base font-semibold leading-relaxed tracking-wide" style={{color: '#f0e6cc', textShadow: '0 1px 12px rgba(0,0,0,0.9)', whiteSpace: 'pre-wrap'}}>
+                      {dialogueWords.map((word, index) => (
+                        <span
+                          className={`transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
+                          key={`${word}-${index}`}
+                        >
+                          {word + (index < dialogueWords.length - 1 ? ' ' : '')}
+                        </span>
+                      ))}
+                    </p>
+
+                    {/* Actions */}
+                    <div className="mt-3 flex justify-center">
                       {!isDialogueFullyVisible ? (
-                        <p className="text-center text-[0.55rem] mt-1 animate-pulse" style={{color: 'rgba(212,175,55,0.5)'}}>Klicken zum Überspringen</p>
+                        <p className="text-[0.58rem] animate-pulse font-cinzel tracking-widest uppercase" style={{color: 'rgba(212,175,55,0.4)'}}>Klicken zum Überspringen</p>
                       ) : !isLastDialogueLine ? (
                         <button
                           aria-label="Continue"
-                          className="mt-2 mx-auto flex items-center gap-1.5 px-3 py-1 rounded text-[0.65rem] font-bold text-black transition hover:opacity-90"
+                          className="flex items-center gap-2 px-5 py-1.5 rounded-sm text-[0.7rem] font-bold font-cinzel tracking-wider uppercase text-black transition-all hover:brightness-110"
                           onClick={(e) => { e.stopPropagation(); continueDialogue(); }}
-                          style={{background: '#d4af37'}}
+                          style={{background: 'linear-gradient(135deg, #d4af37, #b8912a)', boxShadow: '0 0 12px rgba(212,175,55,0.4)'}}
                           type="button"
                         >
-                          Weiter <ChevronRight className="w-3 h-3" />
+                          Weiter <ChevronRight className="w-3.5 h-3.5" />
                         </button>
                       ) : null}
                     </div>
