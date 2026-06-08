@@ -42,13 +42,14 @@ function proj(v:V3, S:number, cx:number, cy:number):[number,number,number] {
   return [cx+v[0]*S*f, cy-v[1]*S*f, v[2]];
 }
 
-// Precompute ry angle that brings each face to face the camera (z-axis)
+// Precompute ry angle that brings each face to face the camera.
+// Rotation order in render is: RY first, then RX.
+// z_final = y*sin(RX) + (-x*sin(ry) + z*cos(ry))*cos(RX)
+// Maximise over ry: d/dRY = 0  =>  tan(ry) = -x/z  =>  ry = atan2(-x, z)
 function faceCameraRy(faceIdx: number): number {
   const [i0,i1,i2] = FACES[faceIdx];
   const n = nrm(cross(sub(VERTS[i1], VERTS[i0]), sub(VERTS[i2], VERTS[i0])));
-  const z_rx = n[1]*Math.sin(RX) + n[2]*Math.cos(RX);
-  const x_rx = n[0];
-  return Math.atan2(-x_rx, z_rx);
+  return Math.atan2(-n[0], n[2]);
 }
 const FACE_ANGLES = FACES.map((_,i) => faceCameraRy(i));
 
