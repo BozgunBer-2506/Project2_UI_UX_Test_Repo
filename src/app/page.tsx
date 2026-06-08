@@ -4620,28 +4620,6 @@ export default function Home() {
                 : null}
             </div>
 
-            {!(isLastDialogueLine && isDialogueFullyVisible && !isCombatScene && !isCharacterSelection) ? (
-            <div className="flex justify-center border-t border-white/[0.07] pt-1">
-              <D20Component
-                currentValue={rollResult?.total ?? null}
-                rollTrigger={d20TriggerKey}
-                onRoll={(val) => {
-                  const result = {
-                    diceType: 20,
-                    rolls: [val],
-                    selectedRoll: val,
-                    modifier: rollModifier,
-                    total: val + rollModifier,
-                    mode: rollMode,
-                    label: 'd20',
-                  };
-                  setRollResult(result);
-                  setRollAnimationKey((k) => k + 1);
-                  addGameLog({ title: 'd20 gewürfelt', detail: `Ergebnis ${result.total}` });
-                }}
-              />
-            </div>
-            ) : null}
 
             {/* Quest-Log */}
             <div className="px-3 py-3 border-t border-white/[0.07] shrink-0">
@@ -4688,6 +4666,28 @@ export default function Home() {
 
           </aside>
         </div>
+
+      {/* Floating D20 — fixed bottom-right corner */}
+      <div className="fixed bottom-4 right-4 z-50" style={{filter:'drop-shadow(0 0 18px rgba(80,120,255,0.35))'}}>
+        <D20Component
+          currentValue={rollResult?.total ?? null}
+          rollTrigger={d20TriggerKey}
+          onRoll={(val) => {
+            const result = {
+              diceType: 20,
+              rolls: [val],
+              selectedRoll: val,
+              modifier: rollModifier,
+              total: val + rollModifier,
+              mode: rollMode,
+              label: 'd20',
+            };
+            setRollResult(result);
+            setRollAnimationKey((k) => k + 1);
+            addGameLog({ title: 'd20 gewürfelt', detail: `Ergebnis ${result.total}` });
+          }}
+        />
+      </div>
     </div>
   );
 }

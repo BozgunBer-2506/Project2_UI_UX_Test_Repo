@@ -225,27 +225,13 @@ export default function D20({
       ctx.shadowBlur=(7+t*13)*DPR;
       ctx.shadowColor=`rgba(100,160,255,${0.18+t*0.32})`; ctx.stroke(); ctx.shadowBlur=0;
 
-      // Number
+      // Number — small and dimmed on all faces while showing or animating
       if(camDot>0.08){
-        const isResult = !isAnimating && num === targetNumRef.current;
-        const alpha = isResult ? 1 : Math.min(0.55, (camDot-0.08)/0.30);
-        if(alpha <= 0) continue;
-
-        if(isResult){
-          // Result number: very large, bright, glowing
-          const sz = Math.round(S*0.38*DPR);
-          ctx.font=`900 ${sz}px Georgia,serif`; ctx.textAlign="center"; ctx.textBaseline="middle";
-          ctx.shadowBlur=30*DPR; ctx.shadowColor='rgba(180,220,255,1.0)';
-          ctx.fillStyle='rgba(240,248,255,1.0)';
-          ctx.fillText(String(num),cxF,cyF);
-          ctx.shadowBlur=16*DPR; ctx.shadowColor='rgba(100,160,255,0.9)';
-          ctx.fillStyle='rgba(220,240,255,0.5)';
-          ctx.fillText(String(num),cxF,cyF);
-          ctx.shadowBlur=0;
-        } else {
+        const alpha = Math.min(isAnimating ? 0.45 : 0.30, (camDot-0.08)/0.25);
+        if(alpha > 0){
           const sz = Math.round(S*0.13*DPR);
           ctx.font=`700 ${sz}px Georgia,serif`; ctx.textAlign="center"; ctx.textBaseline="middle";
-          ctx.shadowBlur=6*DPR; ctx.shadowColor=`rgba(212,175,55,0.5)`;
+          ctx.shadowBlur=4*DPR; ctx.shadowColor=`rgba(212,175,55,0.4)`;
           ctx.fillStyle=`rgba(180,148,40,${alpha})`;
           ctx.fillText(String(num),cxF,cyF); ctx.shadowBlur=0;
         }
@@ -266,12 +252,36 @@ export default function D20({
       next.push(p);
     }
     particles.current=next;
+
+    // Result overlay — always centered, can't miss it
+    if(!isAnimating && targetNumRef.current > 0){
+      const n = targetNumRef.current;
+      const is20 = n === 20;
+      // Dark backdrop circle
+      const bd = ctx.createRadialGradient(CX,CY,0,CX,CY,S*0.52);
+      bd.addColorStop(0, 'rgba(4,6,22,0.82)');
+      bd.addColorStop(0.7, 'rgba(4,6,22,0.55)');
+      bd.addColorStop(1, 'rgba(4,6,22,0)');
+      ctx.fillStyle=bd; ctx.beginPath(); ctx.arc(CX,CY,S*0.52,0,Math.PI*2); ctx.fill();
+      // Glow ring
+      ctx.beginPath(); ctx.arc(CX,CY,S*0.44,0,Math.PI*2);
+      ctx.strokeStyle=is20?'rgba(160,210,255,0.5)':'rgba(212,175,55,0.45)';
+      ctx.lineWidth=1.2*DPR;
+      ctx.shadowBlur=12*DPR; ctx.shadowColor=is20?'rgba(100,180,255,0.8)':'rgba(212,175,55,0.7)';
+      ctx.stroke(); ctx.shadowBlur=0;
+      // Big number
+      const sz = n>=10 ? Math.round(S*0.52*DPR) : Math.round(S*0.62*DPR);
+      ctx.font=`900 ${sz}px Georgia,serif`; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.shadowBlur=28*DPR; ctx.shadowColor=is20?'rgba(160,210,255,1)':'rgba(212,175,55,1)';
+      ctx.fillStyle=is20?'rgba(220,240,255,1)':'rgba(255,215,70,1)';
+      ctx.fillText(String(n),CX,CY); ctx.shadowBlur=0;
+    }
   }, []);
 
   useEffect(()=>{
     const canvas = canvasRef.current; if(!canvas) return;
     const DPR = window.devicePixelRatio||1;
-    canvas.width=220*DPR; canvas.height=230*DPR;
+    canvas.width=160*DPR; canvas.height=168*DPR;
     canvas.getContext("2d")!.scale(DPR,DPR);
     let last=0;
     const loop=(t:number)=>{
@@ -285,26 +295,14 @@ export default function D20({
 
   return (
     <div
-      className="flex flex-col items-center shrink-0 cursor-pointer select-none"
+      className="flex flex-col items-center cursor-pointer select-none"
       onClick={startRoll}
       title="Klicken zum Würfeln"
     >
-      <canvas ref={canvasRef} style={{width:220,height:230,background:"transparent"}} />
-      <div className="text-center pb-2 -mt-4">
-        <p className="text-[0.44rem] uppercase tracking-[0.32em] font-cinzel" style={{color:"rgba(140,180,255,0.45)"}}>
-          Würfel-Verlauf
-        </p>
-        {lastRoll !== null
-          ? <p className="text-[0.56rem] mt-0.5 font-cinzel" style={{color:"rgba(160,200,255,0.65)"}}>
-              Letzter Wurf:{' '}
-              <span style={{
-                color: lastRoll===20 ? '#a0c4ff' : '#d4af37',
-                fontWeight:900,
-                textShadow: lastRoll===20 ? '0 0 8px rgba(100,160,255,0.8)' : 'none',
-              }}>{lastRoll}</span>
-            </p>
-          : <p className="text-[0.52rem] mt-0.5" style={{color:"rgba(100,160,255,0.2)"}}>▽</p>}
-      </div>
+      <canvas ref={canvasRef} style={{width:160,height:168,background:"transparent"}} />
+      <p className="text-[0.42rem] uppercase tracking-[0.28em] font-cinzel -mt-2" style={{color:"rgba(140,180,255,0.4)"}}>
+        {lastRoll !== null ? <>Wurf: <span style={{color: lastRoll===20?'#a0c4ff':'#d4af37', fontWeight:900}}>{lastRoll}</span></> : 'Würfeln'}
+      </p>
     </div>
   );
 }
