@@ -3893,11 +3893,13 @@ export default function Home() {
                     <div className="flex-1 min-w-0">
                       <p className="text-center text-[0.95rem] font-semibold leading-relaxed" style={{color: '#ffffff', textShadow: '0 1px 10px rgba(0,0,0,1)'}}>
                         {dialogueWords.map((word, index) => (
-                          <span
-                            className={`inline-block transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
-                            key={`${word}-${index}`}
-                          >
-                            {word}{index < dialogueWords.length - 1 ? ' ' : ''}
+                          <span key={`${word}-${index}`}>
+                            <span
+                              className={`inline transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
+                            >
+                              {word}
+                            </span>
+                            {index < dialogueWords.length - 1 ? ' ' : ''}
                           </span>
                         ))}
                       </p>
