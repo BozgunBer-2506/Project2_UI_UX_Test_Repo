@@ -3992,15 +3992,14 @@ export default function Home() {
               </div>
             ) : null}
 
-            {/* Story choices in right panel */}
-            {!isCharacterSelection && !isCombatScene && isLastDialogueLine && isDialogueFullyVisible ? (
-              <div className="px-4 py-3 border-b border-white/[0.07] space-y-2 shrink-0">
-                <p className="text-[0.65rem] uppercase tracking-wider text-slate-500 mb-2">Aktionen</p>
-                {currentScene.choices.map((choice) => renderChoiceButton(choice))}
-              </div>
-            ) : null}
-
             <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 space-y-3">
+              {/* Story choices */}
+              {!isCharacterSelection && !isCombatScene && isLastDialogueLine && isDialogueFullyVisible ? (
+                <div className="space-y-2">
+                  <p className="text-[0.65rem] uppercase tracking-wider text-slate-500">Aktionen</p>
+                  {currentScene.choices.map((choice) => renderChoiceButton(choice))}
+                </div>
+              ) : null}
               {isCombatScene && visibleInitiativeOrder.length === 0 ? (
                 <div className="space-y-3 rounded-md border border-ember-400/35 bg-ember-500/10 p-4">
                   <div>
