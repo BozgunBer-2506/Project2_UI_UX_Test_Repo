@@ -762,10 +762,30 @@ export default function Home() {
     inventoryState,
     runtimeStats,
   ]);
+  const SKILL_ALIASES: Record<string, string[]> = {
+    Acrobatics:        ['Akrobatik'],       Akrobatik:         ['Acrobatics'],
+    Arcana:            ['Arkane Kunde'],    'Arkane Kunde':    ['Arcana'],
+    Athletics:         ['Athletik'],        Athletik:          ['Athletics'],
+    Deception:         ['Täuschen'],
+    History:           ['Geschichte'],
+    Insight:           ['Motivation'],      Motivation:        ['Insight'],
+    Intimidation:      ['Einschüchtern'],   Einschüchtern:     ['Intimidation'],
+    Investigation:     ['Nachforschung', 'Untersuchung'],
+    Medicine:          ['Heilkunde'],
+    Nature:            ['Naturkunde'],
+    Perception:        ['Wahrnehmung'],     Wahrnehmung:       ['Perception'],
+    Performance:       ['Auftreten'],
+    Persuasion:        ['Überzeugen'],      Überzeugen:        ['Persuasion'],
+    'Sleight of Hand': ['Fingerfertigkeit'],Fingerfertigkeit:  ['Sleight of Hand'],
+    Stealth:           ['Heimlichkeit'],    Heimlichkeit:      ['Stealth'],
+    Survival:          ['Überleben'],       Überleben:         ['Survival'],
+    'Animal Handling': ['Tierumgang'],
+  };
   const pendingSkillNames = new Set(
-    pendingCheck?.checks
+    (pendingCheck?.checks
       .map((check) => check.skill)
-      .filter((skill): skill is string => Boolean(skill)) ?? [],
+      .filter((skill): skill is string => Boolean(skill)) ?? [])
+      .flatMap((name) => [name, ...(SKILL_ALIASES[name] ?? [])]),
   );
 
   const addGameLog = (entry: Omit<GameLogEntry, "id" | "createdAt">) => {
@@ -2536,7 +2556,7 @@ export default function Home() {
             <div className="px-4 pt-4 pb-3 border-b border-white/[0.07] shrink-0">
               <p className="text-sm font-bold text-white font-cinzel tracking-wide">{activeCharacter?.name ?? 'Kein Charakter'}</p>
               {activeCharacter ? (
-                <p className="text-[0.65rem] text-slate-500 mt-0.5">Stufe {activeCharacter.level} {activeCharacter.className} ({activeCharacter.subclassName})</p>
+                <p className="text-[0.6rem] text-slate-500 mt-0.5 font-cinzel uppercase tracking-[0.14em]">Stufe {activeCharacter.level} {activeCharacter.className} ({activeCharacter.subclassName})</p>
               ) : null}
             </div>
 
@@ -2571,7 +2591,7 @@ export default function Home() {
                     <HeartPulse className="w-3.5 h-3.5 shrink-0" style={{color: '#ef4444'}} />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[0.6rem] font-bold uppercase tracking-wider text-slate-500">TP</span>
+                        <span className="text-[0.6rem] font-bold uppercase tracking-wider text-slate-500 font-cinzel">TP</span>
                         <span className="text-[0.68rem] font-bold text-white">{activeRuntimeStats.currentHp} / {activeRuntimeStats.maxHp}</span>
                       </div>
                       <div className="h-1.5 rounded-full overflow-hidden bg-black/50">
@@ -2584,7 +2604,7 @@ export default function Home() {
                     <ShieldCheck className="w-3.5 h-3.5 shrink-0" style={{color: '#3b82f6'}} />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[0.6rem] font-bold uppercase tracking-wider text-slate-500">RK</span>
+                        <span className="text-[0.6rem] font-bold uppercase tracking-wider text-slate-500 font-cinzel">RK</span>
                         <span className="text-[0.68rem] font-bold text-white">{activeRuntimeStats.ac}</span>
                       </div>
                       <div className="h-1.5 rounded-full overflow-hidden bg-black/50">
@@ -2597,7 +2617,7 @@ export default function Home() {
                     <Swords className="w-3.5 h-3.5 shrink-0" style={{color: '#a855f7'}} />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-[0.6rem] font-bold uppercase tracking-wider text-slate-500">SP</span>
+                        <span className="text-[0.6rem] font-bold uppercase tracking-wider text-slate-500 font-cinzel">SP</span>
                         <span className="text-[0.68rem] font-bold text-white">{activeCharacter.stats.speed} / {activeCharacter.stats.speed}</span>
                       </div>
                       <div className="h-1.5 rounded-full overflow-hidden bg-black/50">
@@ -2664,7 +2684,7 @@ export default function Home() {
                             </div>
                             <div className="flex-1 min-w-0">
                               <span className="block truncate text-slate-300 text-[0.58rem] font-semibold leading-tight">{label}</span>
-                              <span className="text-[0.5rem] text-slate-600 leading-tight">{attr}</span>
+                              <span className="text-[0.5rem] text-slate-600 leading-tight font-cinzel tracking-wide uppercase">{attr}</span>
                             </div>
                             <span className="font-black text-[0.72rem] shrink-0" style={{color: isPending ? '#d4af37' : '#e2e8f0'}}>{value}</span>
                           </button>
@@ -2677,7 +2697,7 @@ export default function Home() {
                 {/* Details + expanded sheet */}
                 <div className="px-4 py-3 border-t border-white/[0.07] shrink-0">
                   <button
-                    className="w-full rounded py-2 text-[0.65rem] font-semibold text-slate-500 border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] transition-colors flex items-center justify-center gap-1.5"
+                    className="w-full rounded py-2 text-[0.65rem] font-semibold text-slate-500 border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] transition-colors flex items-center justify-center gap-1.5 font-cinzel uppercase tracking-wider"
                     onClick={() => setIsSheetExpanded((e) => !e)}
                     type="button"
                   >
@@ -2687,7 +2707,7 @@ export default function Home() {
                   {isSheetExpanded && activeSheet ? (
                     <div className="mt-3 space-y-3">
                       <div>
-                        <p className="text-[0.58rem] uppercase tracking-wider text-slate-600 mb-1.5">Aktionen</p>
+                        <p className="text-[0.58rem] uppercase tracking-wider text-slate-600 mb-1.5 font-cinzel tracking-[0.2em]">Aktionen</p>
                         <div className="space-y-1.5">
                           {activeSheet.actions.map((action) => (
                             <div className="rounded border border-white/[0.08] bg-white/[0.03] p-2" key={action.name}>
@@ -2752,8 +2772,8 @@ export default function Home() {
                       <Image alt={activeNpc.name} className="max-h-8 object-contain" height={40} src={activeNpc.modelImageUrl} width={32} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[0.65rem] font-bold text-slate-300 truncate">{activeNpc.name}</p>
-                      <p className="text-[0.58rem] text-slate-600">Begleitung</p>
+                      <p className="text-[0.65rem] font-bold text-slate-300 truncate font-cinzel">{activeNpc.name}</p>
+                      <p className="text-[0.55rem] text-slate-600 font-cinzel uppercase tracking-wider">Begleitung</p>
                     </div>
                     <div className="flex gap-1 shrink-0 text-[0.58rem] font-bold">
                       <span className="rounded px-1 py-0.5 bg-red-500/15 text-red-200">{companionRuntimeStats.currentHp}</span>
@@ -3998,8 +4018,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Non-combat action grid */}
-            {saveRestored && !isCombatScene ? (
+            {/* Non-combat action grid — hidden when story choices are ready so they get full space */}
+            {saveRestored && !isCombatScene && !(isLastDialogueLine && isDialogueFullyVisible && !isCharacterSelection) ? (
               <div className="px-4 py-3 border-b border-white/[0.07] shrink-0">
                 <div className="grid grid-cols-2 gap-2">
                   {([
@@ -4018,8 +4038,8 @@ export default function Home() {
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.07)'}}>
                         <Icon className="w-4 h-4" style={{color}} />
                       </div>
-                      <p className="text-xs font-bold text-white leading-tight">{label}</p>
-                      <p className="text-[0.65rem] text-slate-500 leading-tight">{sub}</p>
+                      <p className="text-[0.68rem] font-bold text-white leading-tight font-cinzel uppercase tracking-wide">{label}</p>
+                      <p className="text-[0.58rem] text-slate-500 leading-tight font-cinzel">{sub}</p>
                     </button>
                   ))}
                   <button
@@ -4031,8 +4051,8 @@ export default function Home() {
                       <Hourglass className="w-5 h-5 text-slate-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-white">Zug Beenden</p>
-                      <p className="text-[0.65rem] text-slate-500">Runde beenden</p>
+                      <p className="text-sm font-bold text-white font-cinzel uppercase tracking-wide">Zug Beenden</p>
+                      <p className="text-[0.58rem] text-slate-500 font-cinzel">Runde beenden</p>
                     </div>
                   </button>
                 </div>
@@ -4043,7 +4063,7 @@ export default function Home() {
               {/* Story choices */}
               {!isCharacterSelection && !isCombatScene && isLastDialogueLine && isDialogueFullyVisible ? (
                 <div className="space-y-2">
-                  <p className="text-[0.65rem] uppercase tracking-wider text-slate-500">Aktionen</p>
+                  <p className="text-[0.55rem] uppercase tracking-[0.28em] text-slate-500 font-cinzel">Aktionen</p>
                   {currentScene.choices.map((choice) => renderChoiceButton(choice))}
                 </div>
               ) : null}
@@ -4103,7 +4123,7 @@ export default function Home() {
               {isCombatScene && visibleInitiativeOrder.length > 0 ? (
                 <div className="space-y-2.5 rounded-md border border-white/10 bg-white/[0.04] p-3">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-ember-300">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-ember-300 font-cinzel">
                       Initiative
                     </p>
                     {combatRoundState.round > 0 ? (
@@ -4177,7 +4197,7 @@ export default function Home() {
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                              <p className="text-[0.6rem] font-black uppercase tracking-[0.14em] text-slate-400">
+                              <p className="text-[0.6rem] font-black uppercase tracking-[0.14em] text-slate-400 font-cinzel">
                                 Letzte Aktion
                               </p>
                               <p className="mt-1 text-sm font-black text-slate-50">
@@ -4200,7 +4220,7 @@ export default function Home() {
                           </div>
                           <div className="mt-2 grid grid-cols-3 gap-1 text-center">
                             <span className="rounded border border-white/10 bg-black/25 px-1.5 py-1">
-                              <span className="block text-[0.55rem] font-bold uppercase tracking-[0.1em] text-slate-400">
+                              <span className="block text-[0.55rem] font-bold uppercase tracking-[0.1em] text-slate-400 font-cinzel">
                                 Attack
                               </span>
                               <span className="text-sm font-black">
@@ -4208,7 +4228,7 @@ export default function Home() {
                               </span>
                             </span>
                             <span className="rounded border border-white/10 bg-black/25 px-1.5 py-1">
-                              <span className="block text-[0.55rem] font-bold uppercase tracking-[0.1em] text-slate-400">
+                              <span className="block text-[0.55rem] font-bold uppercase tracking-[0.1em] text-slate-400 font-cinzel">
                                 AC
                               </span>
                               <span className="text-sm font-black">
@@ -4216,7 +4236,7 @@ export default function Home() {
                               </span>
                             </span>
                             <span className="rounded border border-white/10 bg-black/25 px-1.5 py-1">
-                              <span className="block text-[0.55rem] font-bold uppercase tracking-[0.1em] text-slate-400">
+                              <span className="block text-[0.55rem] font-bold uppercase tracking-[0.1em] text-slate-400 font-cinzel">
                                 Schaden
                               </span>
                               <span className="text-sm font-black">
@@ -4599,6 +4619,7 @@ export default function Home() {
                 : null}
             </div>
 
+            {!(isLastDialogueLine && isDialogueFullyVisible && !isCombatScene && !isCharacterSelection) ? (
             <div className="flex justify-center border-t border-white/10 pt-3 pb-3 text-slate-50">
               <button
                 aria-label="Letztes Wuerfelergebnis"
@@ -4635,6 +4656,7 @@ export default function Home() {
                 </span>
               </button>
             </div>
+            ) : null}
 
             {/* Quest-Log */}
             <div className="px-3 py-3 border-t border-white/[0.07] shrink-0">
@@ -4650,7 +4672,7 @@ export default function Home() {
                     <ScrollText className="w-3.5 h-3.5" style={{color: '#d4af37'}} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[0.7rem] font-bold text-white">Das gestohlene Ei</p>
+                    <p className="text-[0.7rem] font-bold text-white font-cinzel tracking-wide">Das gestohlene Ei</p>
                     <p className="text-[0.58rem] text-slate-500 mt-0.5 leading-relaxed">Findet das gestohlene Ei, bevor es in falsche Hände gerät.</p>
                   </div>
                   <div className="shrink-0 w-2.5 h-2.5 rotate-45 mt-1" style={{background: '#d4af37', boxShadow: '0 0 5px rgba(212,175,55,0.5)'}} />
@@ -4665,14 +4687,14 @@ export default function Home() {
                       <Icon className="w-3.5 h-3.5 text-slate-600" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[0.7rem] font-bold text-slate-500">{title}</p>
+                      <p className="text-[0.7rem] font-bold text-slate-500 font-cinzel tracking-wide">{title}</p>
                       <p className="text-[0.58rem] text-slate-700 mt-0.5 leading-relaxed">{desc}</p>
                     </div>
                     <div className="shrink-0 w-3 h-3 rounded-full mt-1 border border-slate-700" />
                   </div>
                 ))}
               </div>
-              <button className="mt-2 w-full flex items-center justify-center gap-1 py-1.5 text-[0.6rem] font-semibold text-slate-600 hover:text-slate-400 transition-colors border border-white/[0.06] rounded-lg hover:bg-white/5" type="button">
+              <button className="mt-2 w-full flex items-center justify-center gap-1 py-1.5 text-[0.6rem] font-semibold text-slate-600 hover:text-slate-400 transition-colors border border-white/[0.06] rounded-lg hover:bg-white/5 font-cinzel uppercase tracking-wider" type="button">
                 Alle Quests anzeigen
                 <ChevronDown className="w-2.5 h-2.5" />
               </button>
