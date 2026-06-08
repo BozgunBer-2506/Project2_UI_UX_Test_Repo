@@ -2423,22 +2423,27 @@ export default function Home() {
 
           </div>
           <nav className="hidden lg:flex items-center gap-0.5">
-            {['Kampagne', 'Karte', 'Notizen', 'Bestiarium', 'Handouts'].map((tab) => (
-              <button
-                key={tab}
-                className={`px-3 py-1.5 text-[0.68rem] font-bold font-cinzel rounded uppercase tracking-[0.12em] transition-all relative ${
-                  tab === 'Kampagne'
-                    ? 'text-[#d4af37]'
-                    : 'text-slate-500 hover:text-slate-200 hover:bg-white/5'
-                }`}
-                type="button"
+            <Link
+              href="/campaigns"
+              className="px-3 py-1.5 text-[0.68rem] font-bold font-cinzel rounded uppercase tracking-[0.12em] transition-all relative text-slate-400 hover:text-slate-200 hover:bg-white/5"
+            >
+              Kampagne
+            </Link>
+            <Link
+              href="/login"
+              className="px-3 py-1.5 text-[0.68rem] font-bold font-cinzel rounded uppercase tracking-[0.12em] transition-all text-slate-400 hover:text-slate-200 hover:bg-white/5"
+            >
+              Login
+            </Link>
+            {isCombatScene ? (
+              <Link
+                href="/combat"
+                className="px-3 py-1.5 text-[0.68rem] font-bold font-cinzel rounded uppercase tracking-[0.12em] transition-all text-red-400 hover:text-red-200 hover:bg-red-500/10"
+                onClick={prepareCombatRouteHandoff}
               >
-                {tab}
-                {tab === 'Kampagne' && (
-                  <span className="absolute bottom-0 left-3 right-3 h-px" style={{background: 'rgba(212,175,55,0.6)'}} />
-                )}
-              </button>
-            ))}
+                Combat
+              </Link>
+            ) : null}
           </nav>
         </div>
 
