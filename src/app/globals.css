@@ -104,53 +104,53 @@ select {
 }
 
 .d20-outline {
-  fill: rgba(30, 64, 175, 0.15);
-  stroke: rgba(147, 197, 253, 0.8);
+  fill: rgba(8, 14, 48, 0.7);
+  stroke: rgba(212, 175, 55, 0.85);
   stroke-width: 1.8;
 }
 
 .d20-facet {
-  stroke: rgba(147, 197, 253, 0.35);
+  stroke: rgba(212, 175, 55, 0.25);
   stroke-linejoin: round;
   stroke-width: 1;
 }
 
 .d20-facet-light {
-  fill: rgba(99, 179, 237, 0.25);
+  fill: rgba(212, 175, 55, 0.12);
 }
 
 .d20-facet-front {
-  fill: rgba(59, 130, 246, 0.15);
+  fill: rgba(15, 20, 60, 0.5);
 }
 
 .d20-facet-mid {
-  fill: rgba(30, 64, 175, 0.1);
+  fill: rgba(8, 14, 48, 0.4);
 }
 
 .d20-facet-dark,
 .d20-facet-bottom-dark {
-  fill: rgba(15, 23, 42, 0.4);
+  fill: rgba(4, 8, 28, 0.7);
 }
 
 .d20-facet-bottom {
-  fill: rgba(30, 58, 138, 0.2);
+  fill: rgba(10, 16, 50, 0.5);
 }
 
 .d20-edge {
   fill: none;
-  stroke: rgba(0, 0, 0, 0.36);
+  stroke: rgba(212, 175, 55, 0.4);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1.1;
 }
 
 .d20-result-number {
-  color: #dbeafe;
+  color: #d4af37;
   font-size: 2rem;
   font-weight: 900;
   position: relative;
   z-index: 4;
-  text-shadow: 0 0 12px rgba(147,197,253,0.8), 0 0 4px rgba(255,255,255,0.6);
+  text-shadow: 0 0 14px rgba(212,175,55,0.9), 0 0 4px rgba(255,220,80,0.6);
 }
 
 @keyframes d20-result-roll {

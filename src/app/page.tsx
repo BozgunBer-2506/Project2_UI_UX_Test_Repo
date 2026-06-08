@@ -490,7 +490,7 @@ export default function Home() {
 
   const diceColorClass: Record<DiceColor, string> = {
     ember: "from-ember-400 to-orange-700 text-ink-950 border-ember-300",
-    arcane: "from-cyan-300 to-blue-700 text-ink-950 border-cyan-200",
+    arcane: "from-[#080e30] to-[#0a0a20] text-white border-[#d4af37]/60",
     venom: "from-lime-300 to-emerald-700 text-ink-950 border-lime-200",
     blood: "from-red-400 to-rose-900 text-white border-red-300",
   };
@@ -2411,8 +2411,10 @@ export default function Home() {
       <header className="relative flex-none h-14 flex items-center px-4 gap-3 border-b border-white/[0.08] z-40" style={{background: 'rgba(8,8,8,0.97)', backdropFilter: 'blur(20px)'}}>
         {/* Logo + nav */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.35)'}}>
-            <ScrollText className="w-3.5 h-3.5" style={{color: '#d4af37'}} />
+          {/* Logo + campaign name */}
+          <div className="hidden lg:flex items-center gap-2 mr-2">
+            <img src='/logo-eagle.svg' alt='Falkenwacht' width={28} height={28} style={{filter: 'drop-shadow(0 0 4px rgba(212,175,55,0.5))'}} />
+
           </div>
           <nav className="hidden lg:flex items-center gap-0.5">
             {['Kampagne', 'Karte', 'Notizen', 'Bestiarium', 'Handouts'].map((tab) => (
@@ -3590,7 +3592,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
               <div className="absolute inset-0 p-0">
           <>
-            {false && isCombatScene && combatRoundState.round > 0 ? (
+            {isCombatScene && combatRoundState.round > 0 ? (
               <div className="absolute left-3 right-3 top-14 z-20 grid gap-2 rounded-md border border-white/10 bg-ink-950/80 p-2 shadow-2xl backdrop-blur lg:grid-cols-[12rem_minmax(0,1fr)]">
                 <div className="rounded-md border border-ember-400/35 bg-ember-500/10 px-3 py-2">
                   <p className="text-[0.62rem] font-bold uppercase tracking-[0.18em] text-ember-300">
@@ -4541,7 +4543,7 @@ export default function Home() {
                 : null}
             </div>
 
-            <div className="hidden flex justify-center border-t border-white/10 pt-3 text-slate-50">
+            <div className="flex justify-center border-t border-white/10 pt-3 pb-3 text-slate-50">
               <button
                 aria-label="Letztes Wuerfelergebnis"
                 className="relative mx-auto grid size-16 place-items-center"
@@ -4620,22 +4622,7 @@ export default function Home() {
               </button>
             </div>
 
-            {/* 3D D20 */}
-            <D20Component
-              currentValue={rollResult?.total ?? null}
-              onRoll={(value) => {
-                setRollResult({
-                  diceType: 20,
-                  rolls: [value],
-                  selectedRoll: value,
-                  modifier: 0,
-                  total: value,
-                  mode: "normal",
-                  label: "d20",
-                });
-                setRollAnimationKey((k) => k + 1);
-              }}
-            />
+
           </aside>
         </div>
     </div>
