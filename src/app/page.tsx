@@ -4620,41 +4620,24 @@ export default function Home() {
             </div>
 
             {!(isLastDialogueLine && isDialogueFullyVisible && !isCombatScene && !isCharacterSelection) ? (
-            <div className="flex justify-center border-t border-white/10 pt-3 pb-3 text-slate-50">
-              <button
-                aria-label="Letztes Wuerfelergebnis"
-                className="relative mx-auto grid size-16 place-items-center"
-                type="button"
-              >
-                <span
-                  className={`d20-result ${
-                    rollResult ? "d20-result-roll" : ""
-                  } grid size-16 place-items-center border bg-gradient-to-br text-xl font-black shadow-glow ${diceColorClass[diceColor]}`}
-                  key={rollAnimationKey}
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="d20-result-shape"
-                    viewBox="0 0 100 100"
-                  >
-                    <polygon className="d20-outline" points="50,3 82,18 96,48 88,70 50,97 12,70 4,48 18,18" />
-                    <polygon className="d20-facet d20-facet-light" points="50,3 18,18 50,36 82,18" />
-                    <polygon className="d20-facet d20-facet-mid" points="18,18 4,48 50,36" />
-                    <polygon className="d20-facet d20-facet-dark" points="82,18 96,48 50,36" />
-                    <polygon className="d20-facet d20-facet-front" points="4,48 50,36 96,48 50,66" />
-                    <polygon className="d20-facet d20-facet-mid" points="4,48 12,70 50,66" />
-                    <polygon className="d20-facet d20-facet-dark" points="96,48 88,70 50,66" />
-                    <polygon className="d20-facet d20-facet-bottom" points="12,70 50,97 50,66" />
-                    <polygon className="d20-facet d20-facet-bottom-dark" points="88,70 50,97 50,66" />
-                    <polyline className="d20-edge" points="50,3 50,36 4,48 50,66 50,97" />
-                    <polyline className="d20-edge" points="18,18 50,36 82,18" />
-                    <polyline className="d20-edge" points="96,48 50,66 12,70" />
-                  </svg>
-                  <span className="d20-result-number">
-                    {rollResult?.total ?? "d20"}
-                  </span>
-                </span>
-              </button>
+            <div className="flex justify-center border-t border-white/[0.07] pt-1">
+              <D20Component
+                currentValue={rollResult?.total ?? null}
+                onRoll={(val) => {
+                  const result = {
+                    diceType: 20,
+                    rolls: [val],
+                    selectedRoll: val,
+                    modifier: rollModifier,
+                    total: val + rollModifier,
+                    mode: rollMode,
+                    label: 'd20',
+                  };
+                  setRollResult(result);
+                  setRollAnimationKey((k) => k + 1);
+                  addGameLog({ title: 'd20 gewürfelt', detail: `Ergebnis ${result.total}` });
+                }}
+              />
             </div>
             ) : null}
 
