@@ -3892,56 +3892,43 @@ export default function Home() {
                   ))}
                 </div>
                 <div
-                  className="relative mx-4 mt-2 rounded-xl cursor-pointer"
+                  className="relative mx-0 mt-0 cursor-pointer"
                   onClick={() => { if (!isDialogueFullyVisible) setVisibleWordCount(dialogueWords.length); }}
-                  style={{
-                    background: 'rgba(4,6,16,0.96)',
-                    border: '1px solid rgba(212,175,55,0.35)',
-                    boxShadow: '0 0 40px rgba(0,0,0,0.8), 0 0 20px rgba(212,175,55,0.08), inset 0 1px 0 rgba(212,175,55,0.15)',
-                  }}
+                  style={{background: 'rgba(3,4,10,0.95)', borderTop: '1px solid rgba(212,175,55,0.2)'}}
                 >
-                  {/* Top gold line */}
-                  <div className="absolute top-0 left-16 right-16 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.7), transparent)'}} />
-                  {/* Bottom gold line */}
-                  <div className="absolute bottom-0 left-16 right-16 h-px" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent)'}} />
+                  <div className="flex items-start gap-4 px-6 py-5">
+                    {/* Speaker label - left side */}
+                    <span className="shrink-0 mt-1 px-2 py-0.5 rounded text-[0.58rem] font-black font-cinzel tracking-[0.18em] uppercase" style={{background: 'rgba(212,175,55,0.12)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.3)'}}>
+                      {currentDialogueLine.speaker}
+                    </span>
 
-                  <div className="px-8 pt-4 pb-4">
-                    {/* Speaker */}
-                    <div className="flex items-center justify-center gap-2 mb-3">
-                      <div className="h-px flex-1" style={{background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.3))'}} />
-                      <span className="px-3 py-0.5 rounded text-[0.6rem] font-black font-cinzel tracking-[0.2em] uppercase" style={{background: 'rgba(212,175,55,0.12)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.3)'}}>
-                        {currentDialogueLine.speaker}
-                      </span>
-                      <div className="h-px flex-1" style={{background: 'linear-gradient(90deg, rgba(212,175,55,0.3), transparent)'}} />
-                    </div>
-
-                    {/* Text */}
-                    <p className="text-center text-base font-semibold leading-relaxed tracking-wide" style={{color: '#f0e6cc', textShadow: '0 1px 12px rgba(0,0,0,0.9)', whiteSpace: 'pre-wrap'}}>
-                      {dialogueWords.map((word, index) => (
-                        <span
-                          className={`transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
-                          key={`${word}-${index}`}
-                        >
-                          {word + (index < dialogueWords.length - 1 ? ' ' : '')}
-                        </span>
-                      ))}
-                    </p>
-
-                    {/* Actions */}
-                    <div className="mt-3 flex justify-center">
-                      {!isDialogueFullyVisible ? (
-                        <p className="text-[0.58rem] animate-pulse font-cinzel tracking-widest uppercase" style={{color: 'rgba(212,175,55,0.4)'}}>Klicken zum Überspringen</p>
-                      ) : !isLastDialogueLine ? (
-                        <button
-                          aria-label="Continue"
-                          className="flex items-center gap-2 px-5 py-1.5 rounded-sm text-[0.7rem] font-bold font-cinzel tracking-wider uppercase text-black transition-all hover:brightness-110"
-                          onClick={(e) => { e.stopPropagation(); continueDialogue(); }}
-                          style={{background: 'linear-gradient(135deg, #d4af37, #b8912a)', boxShadow: '0 0 12px rgba(212,175,55,0.4)'}}
-                          type="button"
-                        >
-                          Weiter <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
-                      ) : null}
+                    {/* Text area */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-lg font-semibold leading-relaxed" style={{color: '#f2e8d4', textShadow: '0 1px 8px rgba(0,0,0,0.9)', whiteSpace: 'pre-wrap'}}>
+                        {dialogueWords.map((word, index) => (
+                          <span
+                            className={`transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
+                            key={`${word}-${index}`}
+                          >
+                            {word + (index < dialogueWords.length - 1 ? ' ' : '')}
+                          </span>
+                        ))}
+                      </p>
+                      <div className="mt-3 flex items-center gap-3">
+                        {!isDialogueFullyVisible ? (
+                          <p className="text-[0.55rem] animate-pulse font-cinzel tracking-widest uppercase" style={{color: 'rgba(212,175,55,0.35)'}}>Klicken zum Überspringen</p>
+                        ) : !isLastDialogueLine ? (
+                          <button
+                            aria-label="Continue"
+                            className="flex items-center gap-1.5 px-4 py-1.5 rounded text-[0.68rem] font-bold font-cinzel tracking-wider uppercase text-black transition-all hover:brightness-110"
+                            onClick={(e) => { e.stopPropagation(); continueDialogue(); }}
+                            style={{background: '#d4af37', boxShadow: '0 0 10px rgba(212,175,55,0.35)'}}
+                            type="button"
+                          >
+                            Weiter <ChevronRight className="w-3 h-3" />
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 </div>
