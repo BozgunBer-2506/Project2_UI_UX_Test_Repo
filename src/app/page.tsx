@@ -426,6 +426,7 @@ export default function Home() {
   const [rollModifier, setRollModifier] = useState(0);
   const [rollResult, setRollResult] = useState<RollResult | null>(null);
   const [rollAnimationKey, setRollAnimationKey] = useState(0);
+  const [d20TriggerKey, setD20TriggerKey] = useState(0);
   const [diceColor, setDiceColor] = useState<DiceColor>("arcane");
   const [isSheetExpanded, setIsSheetExpanded] = useState(false);
   const [isSkillsExpanded, setIsSkillsExpanded] = useState(true);
@@ -2486,7 +2487,7 @@ export default function Home() {
           {/* Icon buttons */}
           <div className="flex items-center gap-1 mr-3">
             {([
-              {icon: Dice5, label: 'Würfeln', onClick: rollManualDice},
+              {icon: Dice5, label: 'Würfeln', onClick: () => setD20TriggerKey(k => k+1)},
               {icon: BookOpen, label: 'Regelwerk', onClick: () => setIsDmPanelOpen((o: boolean) => !o)},
               {icon: ClipboardList, label: 'Log', onClick: () => setIsLogPanelOpen((o: boolean) => !o)},
             ] as const).map(({icon: Icon, label, onClick}) => (
@@ -4023,7 +4024,7 @@ export default function Home() {
               <div className="px-4 py-3 border-b border-white/[0.07] shrink-0">
                 <div className="grid grid-cols-2 gap-2">
                   {([
-                    {icon: Dice5, label: 'Würfeln', sub: 'W20', color: '#d4af37', onClick: rollManualDice},
+                    {icon: Dice5, label: 'Würfeln', sub: 'W20', color: '#d4af37', onClick: () => setD20TriggerKey(k => k+1)},
                     {icon: BookOpen, label: 'Nachschlagen', sub: 'Regelwerk', color: '#94a3b8', onClick: () => setIsDmPanelOpen((o: boolean) => !o)},
                     {icon: Search, label: 'Untersuchen', sub: 'Umgebung', color: '#94a3b8', onClick: undefined},
                     {icon: HandMetal, label: 'Interagieren', sub: 'Objekt / NSC', color: '#94a3b8', onClick: undefined},
@@ -4623,6 +4624,7 @@ export default function Home() {
             <div className="flex justify-center border-t border-white/[0.07] pt-1">
               <D20Component
                 currentValue={rollResult?.total ?? null}
+                rollTrigger={d20TriggerKey}
                 onRoll={(val) => {
                   const result = {
                     diceType: 20,
