@@ -3924,9 +3924,10 @@ export default function Home() {
                   ))}
                 </div>
                 <div
-                  className="relative mx-4 mt-1 cursor-pointer"
+                  className="relative mx-auto mt-1 cursor-pointer"
                   onClick={() => { if (!isDialogueFullyVisible) setVisibleWordCount(dialogueWords.length); }}
                   style={{
+                    maxWidth: '640px',
                     background: 'rgba(6,5,14,0.97)',
                     border: '1px solid rgba(180,140,40,0.5)',
                     borderRadius: '10px',
@@ -3986,7 +3987,7 @@ export default function Home() {
                   </div>
                 </div>
                 {isLastDialogueLine && isDialogueFullyVisible && !isCombatScene && currentScene.choices.length > 0 ? (
-                  <div className="mx-6 mt-2 mb-3 space-y-1.5">
+                  <div className="mx-auto mt-2 mb-3 space-y-1.5" style={{maxWidth:'640px', paddingLeft:'1.5rem', paddingRight:'1.5rem'}}>
                     <p className="text-[0.55rem] uppercase tracking-[0.2em] text-center mb-1.5" style={{color: 'rgba(212,175,55,0.55)'}}>Deine Entscheidung</p>
                     {currentScene.choices.map((choice) => (
                       <button
@@ -4667,8 +4668,8 @@ export default function Home() {
           </aside>
         </div>
 
-      {/* Floating D20 — over the scene image, bottom-right of center column, above dialogue box */}
-      <div className="fixed z-40" style={{bottom:'90px', right:'328px', filter:'drop-shadow(0 0 16px rgba(80,120,255,0.4))'}}>
+      {/* Floating D20 — bottom-right of center column, beside the narrow dialogue box */}
+      <div className="fixed z-50" style={{bottom:'72px', right:'332px', filter:'drop-shadow(0 0 16px rgba(80,120,255,0.4))'}}>
         <D20Component
           currentValue={rollResult?.total ?? null}
           rollTrigger={d20TriggerKey}
