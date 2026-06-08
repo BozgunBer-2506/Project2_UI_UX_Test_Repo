@@ -166,7 +166,7 @@ export default function CombatPage() {
   };
 
   return (
-    <main className="bg-ink-950 px-4 py-5 text-slate-50 overflow-y-auto">
+    <main className="bg-ink-950 px-4 py-5 text-slate-50 overflow-y-auto" style={{maxHeight: '100dvh'}}>
       <section className="mx-auto w-full max-w-6xl flex flex-col gap-4">
         <header className="rounded-md border border-white/10 bg-white/[0.05] p-4">
           <div className="flex items-center gap-3 mb-2">

@@ -2516,7 +2516,7 @@ export default function Home() {
             </div>
             <div className="text-left hidden sm:block">
               <p className="text-[0.65rem] font-bold font-cinzel text-white leading-none">Spielmeister</p>
-              <p className="text-[0.55rem] font-cinzel text-slate-500 leading-none mt-0.5 tracking-wider">DM</p>
+              <p className="text-[0.58rem] font-cinzel text-slate-400 leading-none mt-0.5 tracking-wider">DM</p>
             </div>
             <ChevronDown className="w-3 h-3 text-slate-500" />
           </button>
@@ -2541,7 +2541,7 @@ export default function Home() {
                       <span className="rounded px-2 py-0.5 text-xs font-black text-black shrink-0" style={{background: '#d4af37'}}>{entry.total}</span>
                     ) : null}
                   </div>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-500">{entry.detail}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-400">{entry.detail}</p>
                 </article>
               ))}
             </div>
@@ -2632,7 +2632,7 @@ export default function Home() {
                 <div className="px-3 py-3 flex-1 overflow-y-auto">
                   <div className="flex items-center gap-1.5 mb-2.5">
                     <div className="flex-1 h-px" style={{background: 'rgba(212,175,55,0.2)'}} />
-                    <p className="text-[0.56rem] font-bold uppercase tracking-[0.28em] text-slate-500 font-cinzel">Fertigkeiten</p>
+                    <p className="text-[0.62rem] font-bold uppercase tracking-[0.28em] text-slate-300 font-cinzel">Fertigkeiten</p>
                     <div className="flex-1 h-px" style={{background: 'rgba(212,175,55,0.2)'}} />
                   </div>
                   {activeSheet ? (
@@ -2684,8 +2684,8 @@ export default function Home() {
                               <SkillIcon className="w-3 h-3" style={{color: isPending ? '#d4af37' : '#94a3b8'}} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="block truncate text-slate-300 text-[0.58rem] font-semibold leading-tight">{label}</span>
-                              <span className="text-[0.5rem] text-slate-600 leading-tight font-cinzel tracking-wide uppercase">{attr}</span>
+                              <span className="block truncate text-slate-200 text-[0.65rem] font-semibold leading-tight">{label}</span>
+                              <span className="text-[0.58rem] text-slate-400 leading-tight font-cinzel tracking-wide uppercase">{attr}</span>
                             </div>
                             <span className="font-black text-[0.72rem] shrink-0" style={{color: isPending ? '#d4af37' : '#e2e8f0'}}>{value}</span>
                           </button>
@@ -2708,12 +2708,12 @@ export default function Home() {
                   {isSheetExpanded && activeSheet ? (
                     <div className="mt-3 space-y-3">
                       <div>
-                        <p className="text-[0.58rem] uppercase tracking-wider text-slate-600 mb-1.5 font-cinzel tracking-[0.2em]">Aktionen</p>
+                        <p className="text-[0.62rem] uppercase tracking-wider text-slate-400 mb-1.5 font-cinzel tracking-[0.2em]">Aktionen</p>
                         <div className="space-y-1.5">
                           {activeSheet.actions.map((action) => (
                             <div className="rounded border border-white/[0.08] bg-white/[0.03] p-2" key={action.name}>
                               <p className="text-xs font-bold text-white">{action.name}</p>
-                              <p className="text-[0.58rem] text-slate-600 mt-0.5">{action.note}</p>
+                              <p className="text-[0.62rem] text-slate-400 mt-0.5">{action.note}</p>
                               <div className="mt-1.5 grid grid-cols-2 gap-1">
                                 <button
                                   className="rounded border border-white/[0.08] bg-white/[0.05] px-1 py-1.5 text-[0.6rem] font-bold hover:bg-white/10 transition-colors text-slate-200"
@@ -2741,13 +2741,13 @@ export default function Home() {
                         </div>
                       </div>
                       <div>
-                        <p className="text-[0.58rem] uppercase tracking-wider text-slate-600 mb-1.5">Inventory</p>
+                        <p className="text-[0.62rem] uppercase tracking-wider text-slate-400 mb-1.5 font-cinzel tracking-[0.2em]">Inventory</p>
                         {inventoryItems.length > 0 ? (
                           <div className="space-y-1">
                             {inventoryItems.map((item) => (
                               <div className="rounded border border-white/[0.08] bg-white/[0.03] p-2" key={item.item_id}>
                                 <p className="text-xs font-bold text-white">{item.name}</p>
-                                <p className="text-[0.58rem] text-slate-600">Menge {item.quantity}{item.equipped ? ' · ausgerüstet' : ''}</p>
+                                <p className="text-[0.62rem] text-slate-400">Menge {item.quantity}{item.equipped ? ' · ausgerüstet' : ''}</p>
                                 <div className="mt-1 grid grid-cols-2 gap-1">
                                   {(item.actions ?? []).slice(0, 4).map((action) => (
                                     <button className="rounded border border-white/[0.08] bg-white/[0.05] px-1 py-1 text-[0.58rem] font-semibold hover:bg-white/10 transition-colors text-slate-300" key={action} onClick={() => handleInventoryAction(item, action)} type="button">
@@ -2759,7 +2759,7 @@ export default function Home() {
                             ))}
                           </div>
                         ) : (
-                          <p className="text-[0.62rem] text-slate-600">Wird geladen...</p>
+                          <p className="text-[0.62rem] text-slate-400">Wird geladen...</p>
                         )}
                       </div>
                     </div>
@@ -2774,7 +2774,7 @@ export default function Home() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[0.65rem] font-bold text-slate-300 truncate font-cinzel">{activeNpc.name}</p>
-                      <p className="text-[0.55rem] text-slate-600 font-cinzel uppercase tracking-wider">Begleitung</p>
+                      <p className="text-[0.62rem] text-slate-400 font-cinzel uppercase tracking-wider">Begleitung</p>
                     </div>
                     <div className="flex gap-1 shrink-0 text-[0.58rem] font-bold">
                       <span className="rounded px-1 py-0.5 bg-red-500/15 text-red-200">{companionRuntimeStats.currentHp}</span>
@@ -2810,7 +2810,7 @@ export default function Home() {
               </>
             ) : (
               <div className="flex items-center justify-center flex-1 p-6 text-center">
-                <p className="text-slate-600 text-sm">Charakter wird ausgewählt...</p>
+                <p className="text-slate-400 text-sm">Charakter wird ausgewählt...</p>
               </div>
             )}
 
@@ -3897,11 +3897,14 @@ export default function Home() {
           {!isCharacterSelection ? (
             <div className="hidden min-h-20 space-y-2 overflow-y-auto border-t border-white/10 bg-ink-950/95 p-2">
               {!isCombatScene && pendingCheck ? (
-                <div className="rounded-md border border-ember-400/40 bg-ember-500/10 px-3 py-2 text-sm">
-                  <p className="font-bold text-ember-200">
-                    DM wartet auf Wurf
-                  </p>
-                  <p className="mt-1 text-xs text-slate-300">
+                <div className="rounded-lg px-3 py-2.5 text-sm" style={{background: 'rgba(212,175,55,0.07)', border: '1px solid rgba(212,175,55,0.22)'}}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <div className="w-1 h-1 rotate-45 shrink-0" style={{background: 'rgba(212,175,55,0.7)'}} />
+                    <p className="font-bold font-cinzel text-[0.65rem] uppercase tracking-[0.16em]" style={{color: '#d4af37'}}>
+                      DM wartet auf Wurf
+                    </p>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
                     Bitte würfle {formatChecks(pendingCheck.checks)} im
                     Charakterbogen. Danach entscheidet der DC, ob die Szene
                     gelingt oder scheitert.
@@ -4018,7 +4021,7 @@ export default function Home() {
                         <Icon className="w-4 h-4" style={{color}} />
                       </div>
                       <p className="text-[0.68rem] font-bold text-white leading-tight font-cinzel uppercase tracking-wide">{label}</p>
-                      <p className="text-[0.58rem] text-slate-500 leading-tight font-cinzel">{sub}</p>
+                      <p className="text-[0.65rem] text-slate-400 leading-tight">{sub}</p>
                     </button>
                   ))}
                   <button
@@ -4031,7 +4034,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="text-sm font-bold text-white font-cinzel uppercase tracking-wide">Zug Beenden</p>
-                      <p className="text-[0.58rem] text-slate-500 font-cinzel">Runde beenden</p>
+                      <p className="text-[0.62rem] text-slate-400 font-cinzel">Runde beenden</p>
                     </div>
                   </button>
                 </div>
@@ -4047,20 +4050,21 @@ export default function Home() {
                 </div>
               ) : null}
               {isCombatScene && visibleInitiativeOrder.length === 0 ? (
-                <div className="space-y-3 rounded-md border border-ember-400/35 bg-ember-500/10 p-4">
-                  <div>
-                    <p className="text-base font-black text-ember-100">
+                <div className="space-y-3 rounded-lg p-4" style={{background: 'rgba(212,175,55,0.05)', border: '1px solid rgba(212,175,55,0.18)'}}>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1 h-1 rotate-45 shrink-0" style={{background: 'rgba(212,175,55,0.7)'}} />
+                    <p className="text-[0.7rem] font-black font-cinzel uppercase tracking-[0.18em]" style={{color: '#d4af37'}}>
                       Initiative starten
                     </p>
-                    <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
-                      {initiativeStatus} Würfle Ryu und Ayane. Danach wird die
-                      Reihenfolge aufgebaut und der erste Zug erscheint hier.
-                    </p>
+                    <div className="flex-1 h-px" style={{background: 'rgba(212,175,55,0.15)'}} />
                   </div>
-                  <div className="grid gap-2.5">
+                  <p className="text-[0.72rem] leading-relaxed text-slate-300">
+                    {initiativeStatus} Würfle die Initiative für jeden Charakter. Die Reihenfolge wird danach aufgebaut.
+                  </p>
+                  <div className="grid gap-2">
                     {activeCharacter ? (
                       <button
-                        className="rounded-md border border-ember-400/55 bg-ember-500 px-4 py-3 text-left text-sm font-black text-ink-950 shadow-glow transition hover:border-ember-200 hover:bg-ember-400 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.06] disabled:text-slate-500 disabled:shadow-none"
+                        className="rounded-lg px-4 py-2.5 text-left text-sm font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40"
                         disabled={initiativeRolls[activeCharacter.id] !== undefined}
                         onClick={() =>
                           rollFormula(
@@ -4069,6 +4073,9 @@ export default function Home() {
                             { initiativeCharacterId: activeCharacter.id },
                           )
                         }
+                        style={initiativeRolls[activeCharacter.id] !== undefined
+                          ? {background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8'}
+                          : {background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.4)', color: '#f0e6cc'}}
                         type="button"
                       >
                         {activeCharacter.name} Initiative
@@ -4079,7 +4086,7 @@ export default function Home() {
                     ) : null}
                     {activeNpc ? (
                       <button
-                        className="rounded-md border border-white/10 bg-white/[0.06] px-4 py-3 text-left text-sm font-black text-slate-100 transition hover:border-ember-400/70 hover:bg-ember-500/15 disabled:cursor-not-allowed disabled:text-slate-500"
+                        className="rounded-lg px-4 py-2.5 text-left text-sm font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40"
                         disabled={initiativeRolls[activeNpc.id] !== undefined}
                         onClick={() =>
                           rollFormula(
@@ -4088,6 +4095,9 @@ export default function Home() {
                             { initiativeCharacterId: activeNpc.id },
                           )
                         }
+                        style={initiativeRolls[activeNpc.id] !== undefined
+                          ? {background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8'}
+                          : {background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.14)', color: '#e2e8f0'}}
                         type="button"
                       >
                         {activeNpc.name} Initiative
@@ -4100,13 +4110,13 @@ export default function Home() {
                 </div>
               ) : null}
               {isCombatScene && visibleInitiativeOrder.length > 0 ? (
-                <div className="space-y-2.5 rounded-md border border-white/10 bg-white/[0.04] p-3">
+                <div className="space-y-2.5 rounded-lg p-3" style={{background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)'}}>
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-ember-300 font-cinzel">
+                    <p className="text-[0.65rem] font-bold uppercase tracking-[0.22em] font-cinzel" style={{color: '#d4af37'}}>
                       Initiative
                     </p>
                     {combatRoundState.round > 0 ? (
-                      <span className="rounded border border-ember-400/35 bg-ember-500/10 px-2.5 py-1 text-xs font-black text-ember-100">
+                      <span className="rounded px-2.5 py-1 text-xs font-black" style={{background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)', color: '#f0e6cc'}}>
                         Runde {combatRoundState.round}
                       </span>
                     ) : null}
@@ -4114,13 +4124,12 @@ export default function Home() {
                   <div className="grid gap-1.5">
                     {visibleInitiativeOrder.map((actor, index) => (
                       <div
-                        className={`grid grid-cols-[1.75rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md border px-2.5 py-2 text-xs font-bold ${
-                          actor.id === combatRoundState.activeActorId
-                            ? "border-ember-400 bg-ember-500 text-ink-950 shadow-glow"
-                            : actor.kind === "enemy"
-                              ? "border-red-400/40 bg-red-500/10 text-red-100"
-                              : "border-white/10 bg-white/[0.06] text-slate-100"
-                        }`}
+                        className="grid grid-cols-[1.75rem_minmax(0,1fr)_auto] items-center gap-2 rounded-md border px-2.5 py-2 text-xs font-bold"
+                        style={actor.id === combatRoundState.activeActorId
+                          ? {background: 'rgba(212,175,55,0.18)', border: '1px solid rgba(212,175,55,0.5)', color: '#f0e6cc'}
+                          : actor.kind === "enemy"
+                            ? {background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#fecaca'}
+                            : {background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#e2e8f0'}}
                         key={actor.id}
                       >
                         <span className="grid size-6 place-items-center rounded border border-current/25 text-[0.65rem]">
@@ -4145,7 +4154,7 @@ export default function Home() {
                     ))}
                   </div>
                   {combatRoundState.round > 0 ? (
-                    <div className="rounded-md border border-ember-400/30 bg-ink-950/80 p-2 shadow-[0_0_20px_rgba(251,146,60,0.12)]">
+                    <div className="rounded-md p-2" style={{background: 'rgba(8,8,18,0.85)', border: '1px solid rgba(212,175,55,0.15)', boxShadow: '0 0 20px rgba(212,175,55,0.06)'}}>
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <p className="text-sm font-black text-slate-100">
@@ -4188,11 +4197,10 @@ export default function Home() {
                               </p>
                             </div>
                             <span
-                              className={`shrink-0 rounded px-2 py-1 text-[0.68rem] font-black ${
-                                lastCombatSummary.hit
-                                  ? "bg-ember-500 text-ink-950"
-                                  : "bg-slate-700 text-slate-100"
-                              }`}
+                              className="shrink-0 rounded px-2 py-1 text-[0.68rem] font-black"
+                              style={lastCombatSummary.hit
+                                ? {background: 'rgba(212,175,55,0.2)', border: '1px solid rgba(212,175,55,0.4)', color: '#f0e6cc'}
+                                : {background: 'rgba(100,116,139,0.3)', border: '1px solid rgba(100,116,139,0.3)', color: '#e2e8f0'}}
                             >
                               {lastCombatSummary.hit ? "Treffer" : "Miss"}
                             </span>
@@ -4240,32 +4248,28 @@ export default function Home() {
                       ) : null}
                       <div className="mt-2 grid grid-cols-3 gap-1 text-center text-[0.58rem] font-black uppercase tracking-[0.08em]">
                         <span
-                          className={`rounded border px-1 py-1 ${
-                            combatAttackFlowState.step === "chooseAction"
-                              ? "border-ember-400 bg-ember-500 text-ink-950"
-                              : "border-white/10 bg-white/[0.04] text-slate-400"
-                          }`}
+                          className="rounded border px-1 py-1"
+                          style={combatAttackFlowState.step === "chooseAction"
+                            ? {background: 'rgba(212,175,55,0.18)', border: '1px solid rgba(212,175,55,0.45)', color: '#f0e6cc'}
+                            : {background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: '#64748b'}}
                         >
                           1 Aktion
                         </span>
                         <span
-                          className={`rounded border px-1 py-1 ${
-                            combatAttackFlowState.step === "chooseTarget"
-                              ? "border-ember-400 bg-ember-500 text-ink-950"
-                              : "border-white/10 bg-white/[0.04] text-slate-400"
-                          }`}
+                          className="rounded border px-1 py-1"
+                          style={combatAttackFlowState.step === "chooseTarget"
+                            ? {background: 'rgba(212,175,55,0.18)', border: '1px solid rgba(212,175,55,0.45)', color: '#f0e6cc'}
+                            : {background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: '#64748b'}}
                         >
                           2 Ziel
                         </span>
                         <span
-                          className={`rounded border px-1 py-1 ${
-                            combatAttackFlowState.step === "awaitAttackRoll" ||
-                            combatAttackFlowState.step === "awaitDamageRoll"
-                              ? "border-emerald-400 bg-emerald-500 text-ink-950"
-                              : combatAttackFlowState.step === "turnResolved"
-                                ? "border-white/20 bg-white/[0.08] text-slate-200"
-                                : "border-white/10 bg-white/[0.04] text-slate-400"
-                          }`}
+                          className="rounded border px-1 py-1"
+                          style={combatAttackFlowState.step === "awaitAttackRoll" || combatAttackFlowState.step === "awaitDamageRoll"
+                            ? {background: 'rgba(52,211,153,0.15)', border: '1px solid rgba(52,211,153,0.35)', color: '#a7f3d0'}
+                            : combatAttackFlowState.step === "turnResolved"
+                              ? {background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', color: '#cbd5e1'}
+                              : {background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: '#64748b'}}
                         >
                           3 Roll
                         </span>
@@ -4281,13 +4285,14 @@ export default function Home() {
                       {combatRoundState.turnControl?.requiresPlayerAction &&
                       combatAttackFlowState.step === "chooseAction" ? (
                         <div className="mt-2 rounded-md border border-white/10 bg-black/30 p-2">
-                          <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-ember-300">
+                          <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] font-cinzel" style={{color: 'rgba(212,175,55,0.8)'}}>
                             1. Aktion waehlen
                           </p>
                           <div className="mt-1 grid gap-1.5">
                             {activeCombatActions.map((action) => (
                               <button
-                                className="rounded-md border border-white/10 bg-white/[0.05] px-2 py-2 text-left transition hover:border-ember-400/70 hover:bg-ember-500/10"
+                                className="rounded-md px-2 py-2 text-left transition"
+                                style={{background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)'}}
                                 key={action.name}
                                 onClick={() => {
                                   setSelectedCombatTargetId(null);
@@ -4322,7 +4327,7 @@ export default function Home() {
                       (combatAttackFlowState.step === "chooseTarget" ||
                         combatAttackFlowState.step === "awaitAttackRoll") ? (
                         <div className="mt-2 rounded-md border border-white/10 bg-black/30 p-2">
-                          <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-ember-300">
+                          <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] font-cinzel" style={{color: 'rgba(212,175,55,0.8)'}}>
                             2. Ziel waehlen
                           </p>
                           {combatAttackFlowState.actionName ? (
@@ -4333,11 +4338,10 @@ export default function Home() {
                           <div className="mt-1 grid gap-1.5">
                             {availableCombatTargets.map((target) => (
                               <button
-                                className={`flex items-center justify-between gap-2 rounded-md border px-2 py-1.5 text-left text-xs font-semibold transition ${
-                                  selectedCombatTargetId === target.id
-                                    ? "border-ember-400 bg-ember-500/20 text-ember-100"
-                                    : "border-white/10 bg-white/[0.05] text-slate-100 hover:border-ember-400/60"
-                                }`}
+                                className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-xs font-semibold transition"
+                                style={selectedCombatTargetId === target.id
+                                  ? {background: 'rgba(212,175,55,0.15)', border: '1px solid rgba(212,175,55,0.45)', color: '#f0e6cc'}
+                                  : {background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0'}}
                                 key={target.id}
                                 onClick={() => {
                                   setSelectedCombatTargetId(target.id);
@@ -4369,7 +4373,8 @@ export default function Home() {
                         </div>
                       ) : null}
                       <button
-                        className="mt-2 w-full rounded-md border border-ember-400/55 bg-ember-500 px-3 py-2 text-xs font-black text-ink-950 shadow-glow transition hover:border-ember-200 hover:bg-ember-400 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.06] disabled:text-slate-500 disabled:shadow-none"
+                        className="mt-2 w-full rounded-md px-3 py-2 text-xs font-black transition disabled:cursor-not-allowed disabled:opacity-40 font-cinzel uppercase tracking-wide"
+                        style={{background: 'rgba(212,175,55,0.18)', border: '1px solid rgba(212,175,55,0.45)', color: '#f0e6cc', boxShadow: '0 0 12px rgba(212,175,55,0.15)'}}
                         disabled={
                           isBackendTurnResolving ||
                           (combatRoundState.turnControl?.requiresPlayerAction &&
