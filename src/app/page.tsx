@@ -2465,15 +2465,21 @@ export default function Home() {
         <div className="flex items-center shrink-0 ml-auto">
           {/* Icon buttons */}
           <div className="flex items-center gap-1 mr-3">
-            <button className="w-8 h-8 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors" onClick={rollManualDice} type="button" title="Würfeln">
-              <Dice5 className="w-4 h-4" />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors" onClick={() => setIsDmPanelOpen((o) => !o)} type="button" title="Regelwerk">
-              <BookOpen className="w-4 h-4" />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors" onClick={() => setIsLogPanelOpen((o) => !o)} type="button" title="Einstellungen">
-              <ClipboardList className="w-4 h-4" />
-            </button>
+            {([
+              {icon: Dice5, label: 'Würfeln', onClick: rollManualDice},
+              {icon: BookOpen, label: 'Regelwerk', onClick: () => setIsDmPanelOpen((o: boolean) => !o)},
+              {icon: ClipboardList, label: 'Log', onClick: () => setIsLogPanelOpen((o: boolean) => !o)},
+            ] as const).map(({icon: Icon, label, onClick}) => (
+              <button
+                key={label}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-[0.65rem] font-bold font-cinzel uppercase tracking-wide text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                onClick={onClick}
+                type="button"
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {label}
+              </button>
+            ))}
           </div>
           {/* Vertical divider */}
           <div className="w-px h-6 mx-2" style={{background: 'rgba(255,255,255,0.1)'}} />
