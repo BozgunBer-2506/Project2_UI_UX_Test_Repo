@@ -75,6 +75,7 @@ export default function D20({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ryRef    = useRef(ryForNumber(20));
+  const targetNumRef = useRef<number>(20);
   const animRef  = useRef<{startRy:number; endRy:number; elapsed:number; dur:number; target:number} | null>(null);
   const particles = useRef<Particle[]>([]);
   const pulseRef  = useRef(0);
@@ -119,6 +120,7 @@ export default function D20({
       spawnBurst(W/2, H/2-8, W*0.31);
     }
 
+    targetNumRef.current = -1; // clear result during spin
     animRef.current = { startRy: ryRef.current, endRy: end, elapsed:0, dur:1.8, target:val };
     setTimeout(()=>{
       busyRef.current = false;
@@ -151,7 +153,7 @@ export default function D20({
       anim.elapsed += dt;
       const t = Math.min(anim.elapsed / anim.dur, 1);
       ryRef.current = anim.startRy + (anim.endRy - anim.startRy) * easeOut(t);
-      if(t >= 1) animRef.current = null;
+      if(t >= 1){ targetNumRef.current = anim.target; animRef.current = null; }
     }
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -224,19 +226,29 @@ export default function D20({
       ctx.shadowColor=`rgba(100,160,255,${0.18+t*0.32})`; ctx.stroke(); ctx.shadowBlur=0;
 
       // Number
-      if(camDot>0.15){
-        const alpha = Math.min(1,(camDot-0.15)/0.22);
-        const is20 = num===20;
-        const sz = is20 ? Math.round(S*0.22*DPR) : Math.round(S*0.155*DPR);
-        ctx.font=`900 ${sz}px Georgia,serif`; ctx.textAlign="center"; ctx.textBaseline="middle";
-        if(is20){
-          ctx.shadowBlur=20*DPR; ctx.shadowColor='rgba(160,210,255,0.95)';
-          ctx.fillStyle=`rgba(220,238,255,${alpha})`;
+      if(camDot>0.08){
+        const isResult = !isAnimating && num === targetNumRef.current;
+        const alpha = isResult ? 1 : Math.min(0.55, (camDot-0.08)/0.30);
+        if(alpha <= 0) continue;
+
+        if(isResult){
+          // Result number: very large, bright, glowing
+          const sz = Math.round(S*0.38*DPR);
+          ctx.font=`900 ${sz}px Georgia,serif`; ctx.textAlign="center"; ctx.textBaseline="middle";
+          ctx.shadowBlur=30*DPR; ctx.shadowColor='rgba(180,220,255,1.0)';
+          ctx.fillStyle='rgba(240,248,255,1.0)';
+          ctx.fillText(String(num),cxF,cyF);
+          ctx.shadowBlur=16*DPR; ctx.shadowColor='rgba(100,160,255,0.9)';
+          ctx.fillStyle='rgba(220,240,255,0.5)';
+          ctx.fillText(String(num),cxF,cyF);
+          ctx.shadowBlur=0;
         } else {
-          ctx.shadowBlur=10*DPR; ctx.shadowColor='rgba(212,175,55,0.85)';
-          ctx.fillStyle=`rgba(212,175,55,${alpha})`;
+          const sz = Math.round(S*0.13*DPR);
+          ctx.font=`700 ${sz}px Georgia,serif`; ctx.textAlign="center"; ctx.textBaseline="middle";
+          ctx.shadowBlur=6*DPR; ctx.shadowColor=`rgba(212,175,55,0.5)`;
+          ctx.fillStyle=`rgba(180,148,40,${alpha})`;
+          ctx.fillText(String(num),cxF,cyF); ctx.shadowBlur=0;
         }
-        ctx.fillText(String(num),cxF,cyF); ctx.shadowBlur=0;
       }
     }
 
