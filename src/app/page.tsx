@@ -2374,10 +2374,12 @@ export default function Home() {
     await sendDmHelpMessage(trimmedInput);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     void syncInventoryView();
   }, [inventoryState]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     void syncBackendSave();
   }, [backendSaveState, currentSceneId, selectedCharacterId]);
@@ -2413,6 +2415,7 @@ export default function Home() {
         <div className="flex items-center gap-3 shrink-0">
           {/* Logo + campaign name */}
           <div className="hidden lg:flex items-center gap-2 mr-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src='/logo-eagle.svg' alt='Falkenwacht' width={28} height={28} style={{filter: 'drop-shadow(0 0 4px rgba(212,175,55,0.5))'}} />
 
           </div>
@@ -2520,6 +2523,7 @@ export default function Home() {
                     <div className="h-48 bg-gradient-to-b from-white/5 to-black/80 flex items-end justify-center relative">
                       {/* Atmospheric overlay */}
                       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         alt={`${activeCharacter.name} Portrait`}
                         className="relative z-10 max-h-48 w-auto object-contain drop-shadow-2xl"
