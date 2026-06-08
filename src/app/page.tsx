@@ -405,6 +405,7 @@ const findMatchingSaveState = (
 
 export default function Home() {
   const [currentSceneId, setCurrentSceneId] = useState(initialSceneId);
+  const [saveRestored, setSaveRestored] = useState(false);
   const [selectedCharacterId, setSelectedCharacterId] =
     useState<CharacterId | null>(null);
   const [dialogueLineIndex, setDialogueLineIndex] = useState(0);
@@ -534,6 +535,8 @@ export default function Home() {
       setCurrentSceneId(lastSaveState.sceneId);
       setSelectedCharacterId(lastSaveState.characterId);
     }
+
+    setSaveRestored(true);
   }, []);
 
   const currentScene = findScene(currentSceneId);
@@ -3938,50 +3941,56 @@ export default function Home() {
 
           {/* RIGHT SIDEBAR */}
           <aside className="hidden lg:flex flex-col min-h-0 overflow-hidden border-l border-white/[0.07]" style={{background: 'rgba(8,8,8,0.7)', backdropFilter: 'blur(8px)'}}>
-            {/* Spieler-Aktionen */}
+            {/* Spieler-Aktionen header */}
             <div className="px-4 pt-4 pb-3 border-b border-white/[0.07] shrink-0">
-              <div className="flex items-center gap-1.5 mb-3">
+              <div className="flex items-center gap-1.5">
                 <div className="flex-1 h-px" style={{background: 'rgba(212,175,55,0.15)'}} />
-                <p className="text-[0.65rem] font-bold uppercase tracking-[0.28em] text-slate-500 font-cinzel">Spieler-Aktionen</p>
+                <p className="text-[0.65rem] font-bold uppercase tracking-[0.28em] text-slate-500 font-cinzel">Spieleraktionen</p>
                 <div className="w-1 h-1 rotate-45" style={{background: 'rgba(212,175,55,0.4)'}} />
                 <div className="flex-1 h-px" style={{background: 'rgba(212,175,55,0.15)'}} />
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                {([
-                  {icon: Dice5, label: 'Würfeln', sub: 'W20', color: '#d4af37', onClick: rollManualDice},
-                  {icon: BookOpen, label: 'Nachschlagen', sub: 'Regelwerk', color: '#94a3b8', onClick: () => setIsDmPanelOpen((o: boolean) => !o)},
-                  {icon: Search, label: 'Untersuchen', sub: 'Umgebung', color: '#94a3b8', onClick: undefined},
-                  {icon: HandMetal, label: 'Interagieren', sub: 'Objekt / NSC', color: '#94a3b8', onClick: undefined},
-                ] as const).map(({icon: Icon, label, sub, color, onClick}) => (
+            </div>
+
+            {/* Non-combat action grid */}
+            {saveRestored && !isCombatScene ? (
+              <div className="px-4 py-3 border-b border-white/[0.07] shrink-0">
+                <div className="grid grid-cols-2 gap-2">
+                  {([
+                    {icon: Dice5, label: 'Würfeln', sub: 'W20', color: '#d4af37', onClick: rollManualDice},
+                    {icon: BookOpen, label: 'Nachschlagen', sub: 'Regelwerk', color: '#94a3b8', onClick: () => setIsDmPanelOpen((o: boolean) => !o)},
+                    {icon: Search, label: 'Untersuchen', sub: 'Umgebung', color: '#94a3b8', onClick: undefined},
+                    {icon: HandMetal, label: 'Interagieren', sub: 'Objekt / NSC', color: '#94a3b8', onClick: undefined},
+                  ] as const).map(({icon: Icon, label, sub, color, onClick}) => (
+                    <button
+                      className="rounded-lg p-3 flex flex-col items-start gap-1.5 transition-all hover:bg-white/10"
+                      key={label}
+                      onClick={onClick}
+                      style={{background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)'}}
+                      type="button"
+                    >
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.07)'}}>
+                        <Icon className="w-4 h-4" style={{color}} />
+                      </div>
+                      <p className="text-xs font-bold text-white leading-tight">{label}</p>
+                      <p className="text-[0.65rem] text-slate-500 leading-tight">{sub}</p>
+                    </button>
+                  ))}
                   <button
-                    className="rounded-lg p-3 flex flex-col items-start gap-1.5 transition-all hover:bg-white/10"
-                    key={label}
-                    onClick={onClick}
+                    className="col-span-2 rounded-lg p-3.5 flex items-center gap-3 transition-all hover:bg-white/10"
                     style={{background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)'}}
                     type="button"
                   >
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.07)'}}>
-                      <Icon className="w-4 h-4" style={{color}} />
+                    <div className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.06)'}}>
+                      <Hourglass className="w-5 h-5 text-slate-400" />
                     </div>
-                    <p className="text-xs font-bold text-white leading-tight">{label}</p>
-                    <p className="text-[0.65rem] text-slate-500 leading-tight">{sub}</p>
+                    <div>
+                      <p className="text-sm font-bold text-white">Zug Beenden</p>
+                      <p className="text-[0.65rem] text-slate-500">Runde beenden</p>
+                    </div>
                   </button>
-                ))}
-                <button
-                  className="col-span-2 rounded-lg p-3.5 flex items-center gap-3 transition-all hover:bg-white/10"
-                  style={{background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)'}}
-                  type="button"
-                >
-                  <div className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{background: 'rgba(255,255,255,0.06)'}}>
-                    <Hourglass className="w-5 h-5 text-slate-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-white">Zug Beenden</p>
-                    <p className="text-[0.65rem] text-slate-500">Runde beenden</p>
-                  </div>
-                </button>
+                </div>
               </div>
-            </div>
+            ) : null}
 
             {/* Story choices in right panel */}
             {!isCharacterSelection && !isCombatScene && isLastDialogueLine && isDialogueFullyVisible ? (
