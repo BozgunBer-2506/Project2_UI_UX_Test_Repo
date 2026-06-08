@@ -3892,43 +3892,64 @@ export default function Home() {
                   ))}
                 </div>
                 <div
-                  className="relative mx-0 mt-0 cursor-pointer"
+                  className="relative mx-4 mt-1 cursor-pointer"
                   onClick={() => { if (!isDialogueFullyVisible) setVisibleWordCount(dialogueWords.length); }}
-                  style={{background: 'rgba(3,4,10,0.95)', borderTop: '1px solid rgba(212,175,55,0.2)'}}
+                  style={{
+                    background: 'rgba(6,5,14,0.97)',
+                    border: '1px solid rgba(180,140,40,0.5)',
+                    borderRadius: '10px',
+                    boxShadow: '0 0 40px rgba(0,0,0,0.95), 0 0 0 1px rgba(180,140,40,0.06)',
+                  }}
                 >
-                  <div className="flex items-start gap-4 px-6 py-5">
-                    {/* Speaker label - left side */}
-                    <span className="shrink-0 mt-1 px-2 py-0.5 rounded text-[0.58rem] font-black font-cinzel tracking-[0.18em] uppercase" style={{background: 'rgba(212,175,55,0.12)', color: '#d4af37', border: '1px solid rgba(212,175,55,0.3)'}}>
-                      {currentDialogueLine.speaker}
-                    </span>
+                  {/* Gothic corner decorations */}
+                  {(['top-[-1px] left-[-1px]','top-[-1px] right-[-1px]','bottom-[-1px] left-[-1px]','bottom-[-1px] right-[-1px]'] as const).map((pos) => (
+                    <span key={pos} className={`absolute w-3 h-3 ${pos}`} style={{
+                      borderColor: '#c9a84c',
+                      borderStyle: 'solid',
+                      borderWidth: pos.includes('top') && pos.includes('left') ? '2px 0 0 2px' : pos.includes('top') ? '2px 2px 0 0' : pos.includes('left') ? '0 0 2px 2px' : '0 2px 2px 0',
+                      borderRadius: pos.includes('top') && pos.includes('left') ? '8px 0 0 0' : pos.includes('top') ? '0 8px 0 0' : pos.includes('left') ? '0 0 0 8px' : '0 0 8px 0',
+                    }} />
+                  ))}
 
-                    {/* Text area */}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-lg font-semibold leading-relaxed" style={{color: '#f2e8d4', textShadow: '0 1px 8px rgba(0,0,0,0.9)', whiteSpace: 'pre-wrap'}}>
-                        {dialogueWords.map((word, index) => (
-                          <span
-                            className={`transition-opacity duration-150 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
-                            key={`${word}-${index}`}
-                          >
-                            {word + (index < dialogueWords.length - 1 ? ' ' : '')}
-                          </span>
-                        ))}
-                      </p>
-                      <div className="mt-3 flex items-center gap-3">
-                        {!isDialogueFullyVisible ? (
-                          <p className="text-[0.55rem] animate-pulse font-cinzel tracking-widest uppercase" style={{color: 'rgba(212,175,55,0.35)'}}>Klicken zum Überspringen</p>
-                        ) : !isLastDialogueLine ? (
-                          <button
-                            aria-label="Continue"
-                            className="flex items-center gap-1.5 px-4 py-1.5 rounded text-[0.68rem] font-bold font-cinzel tracking-wider uppercase text-black transition-all hover:brightness-110"
-                            onClick={(e) => { e.stopPropagation(); continueDialogue(); }}
-                            style={{background: '#d4af37', boxShadow: '0 0 10px rgba(212,175,55,0.35)'}}
-                            type="button"
-                          >
-                            Weiter <ChevronRight className="w-3 h-3" />
-                          </button>
-                        ) : null}
-                      </div>
+                  <div className="px-7 pt-4 pb-4">
+                    {/* Speaker */}
+                    <div className="mb-2">
+                      <span className="px-2 py-0.5 text-[0.56rem] font-black font-cinzel tracking-[0.22em] uppercase" style={{background: 'rgba(180,140,40,0.15)', color: '#c9a84c', border: '1px solid rgba(180,140,40,0.35)', borderRadius: '3px'}}>
+                        {currentDialogueLine.speaker}
+                      </span>
+                    </div>
+
+                    {/* Main text - centered, warm cream */}
+                    <p className="text-center text-lg font-semibold leading-[1.8]" style={{color: '#ecddb8', textShadow: '0 1px 12px rgba(0,0,0,0.95)', whiteSpace: 'pre-wrap', letterSpacing: '0.01em'}}>
+                      {dialogueWords.map((word, index) => (
+                        <span
+                          className={`transition-opacity duration-200 ${index < visibleWordCount ? 'opacity-100' : 'opacity-0'}`}
+                          key={`${word}-${index}`}
+                        >
+                          {word + (index < dialogueWords.length - 1 ? ' ' : '')}
+                        </span>
+                      ))}
+                    </p>
+
+                    <div className="mt-3 flex items-center justify-between min-h-[1.75rem]">
+                      {!isDialogueFullyVisible ? (
+                        <p className="text-[0.5rem] animate-pulse font-cinzel tracking-[0.35em] uppercase" style={{color: 'rgba(180,140,40,0.35)'}}>Klicken zum Überspringen</p>
+                      ) : !isLastDialogueLine ? (
+                        <button
+                          aria-label="Continue"
+                          className="ml-auto flex items-center gap-1.5 px-5 py-1.5 text-[0.65rem] font-bold font-cinzel tracking-[0.15em] uppercase transition-all hover:brightness-110 active:scale-95"
+                          onClick={(e) => { e.stopPropagation(); continueDialogue(); }}
+                          style={{
+                            background: 'linear-gradient(135deg, #c9a84c 0%, #9a6e1e 100%)',
+                            color: '#150c00',
+                            borderRadius: '4px',
+                            boxShadow: '0 0 14px rgba(180,140,40,0.45), inset 0 1px 0 rgba(255,225,120,0.25)',
+                          }}
+                          type="button"
+                        >
+                          Weiter <ChevronRight className="w-3 h-3" />
+                        </button>
+                      ) : null}
                     </div>
                   </div>
                 </div>
