@@ -4667,8 +4667,8 @@ export default function Home() {
           </aside>
         </div>
 
-      {/* Floating D20 — fixed bottom-right corner */}
-      <div className="fixed bottom-4 right-4 z-50" style={{filter:'drop-shadow(0 0 18px rgba(80,120,255,0.35))'}}>
+      {/* Floating D20 — over the scene image, bottom-right of center column, above dialogue box */}
+      <div className="fixed z-40" style={{bottom:'90px', right:'328px', filter:'drop-shadow(0 0 16px rgba(80,120,255,0.4))'}}>
         <D20Component
           currentValue={rollResult?.total ?? null}
           rollTrigger={d20TriggerKey}
